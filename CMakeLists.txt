@@ -35,6 +35,8 @@ if(CMAKE_COMPILER_IS_GNUCC)
     add_definitions(-std=c++11)
 endif(CMAKE_COMPILER_IS_GNUCC)
 
+include_directories(${CMAKE_CURRENT_LIST_DIR})
+
 ###############################################################################
 ### Custom macros
 ###############################################################################
