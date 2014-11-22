@@ -4,8 +4,18 @@
 ###############################################################################
 ### General cmake settings
 ###############################################################################
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 3.0 FATAL_ERROR)
 project (sioc)
+
+###############################################################################
+### boost Stuff
+###############################################################################
+
+set(Boost_NO_BOOST_CMAKE ON)
+find_package(Boost 1.57.0 EXACT REQUIRED)
+
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 ###############################################################################
 ### Compiler settings
@@ -44,4 +54,6 @@ endmacro()
 ### What is to build
 ###############################################################################
 
+add_subdirectory(external)
 add_subdirectory(sioc)
+add_subdirectory(test)
