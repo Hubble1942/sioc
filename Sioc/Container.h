@@ -8,6 +8,7 @@
 #include <memory>
 #include <functional>
 #include <unordered_map>
+#include <list>
 
 // boost
 #include <boost/noncopyable.hpp>
@@ -18,7 +19,8 @@ namespace Sioc
 class Container : private boost::noncopyable
 {
 private:
-    typedef std::unordered_map<Detail::TypeInfo::IdType, std::shared_ptr<const Detail::IActivator>> ActivatorRegistry;
+    typedef std::list<std::shared_ptr<const Detail::IActivator>> TypeActivators;
+    typedef std::unordered_map<Detail::TypeInfo::IdType, TypeActivators> ActivatorRegistry;
 
 public:
     template<typename T>
@@ -36,17 +38,17 @@ public:
     template<typename T>
     void RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
     {
-        registry_[Detail::TypeInfo::Id<T>()] = std::make_shared<Detail::GenericActivator<T>>(delegate);
+        registry_[Detail::TypeInfo::Id<T>()].push_back(std::make_shared<Detail::GenericActivator<T>>(delegate));
     }
 
     template<typename T>
     std::shared_ptr<T> Resolve() const
     {
-        auto found = registry_.find(Detail::TypeInfo::Id<T>());
+        auto activators = ActivatorsForType(Detail::TypeInfo::Id<T>());
 
-        if (found != registry_.end())
+        if (activators != nullptr)
         {
-            return std::static_pointer_cast<T>(found->second->Activate(*this));
+            return activators->back()->Activate<T>(*this);
         }
 
         return std::shared_ptr<T>();
@@ -55,7 +57,33 @@ public:
     template<typename T>
     std::vector<std::shared_ptr<T>> ResolveAll() const
     {
-        return std::vector<std::shared_ptr<T>>();
+        auto activators = ActivatorsForType(Detail::TypeInfo::Id<T>());
+
+        std::vector<std::shared_ptr<T>> instances;
+        if (activators != nullptr)
+        {
+            instances.reserve(activators->size());
+
+            for (auto& activator : *activators)
+            {
+                instances.push_back(activator->Activate<T>(*this));
+            }
+        }
+
+        return instances;
+    }
+
+private:
+    const TypeActivators* ActivatorsForType(Detail::TypeInfo::IdType typeId) const
+    {
+        auto found = registry_.find(typeId);
+
+        if (found != registry_.end())
+        {
+            return &(found->second);
+        }
+
+        return nullptr;
     }
 
 private:
