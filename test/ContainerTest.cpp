@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 // sut
-#include <sioc/Container.h>
+#include <Sioc/Container.h>
 
 #include "Mock.h"
 
