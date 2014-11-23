@@ -16,7 +16,7 @@ class IActivator
 public:
     virtual ~IActivator(){}
 
-    virtual std::shared_ptr<void> Activate(const Container&) = 0;
+    virtual std::shared_ptr<void> Activate(const Container&) const = 0;
 };
 
 }

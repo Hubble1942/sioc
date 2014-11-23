@@ -1,6 +1,8 @@
 #pragma once
 
-#include <boost/type_index.hpp>
+// STL
+#include <typeinfo>
+#include <typeindex>
 
 namespace Sioc
 {
@@ -10,7 +12,7 @@ namespace Detail
 class TypeInfo
 {
 public:
-    typedef boost::typeindex::type_index IdType;
+    typedef std::type_index IdType;
 
 private:
     TypeInfo();
@@ -19,7 +21,7 @@ public:
     template<typename T>
     static IdType Id()
     {
-        return boost::typeindex::type_id<T>();
+        return std::type_index(typeid(T));
     }
 };
 

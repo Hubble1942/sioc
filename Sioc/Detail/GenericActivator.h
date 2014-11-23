@@ -1,5 +1,6 @@
 #pragma once
 
+// local
 #include "IActivator.h"
 
 // STL
@@ -21,7 +22,7 @@ public:
         : delegate_(delegate)
     {}
 
-    virtual std::shared_ptr<void> Activate(const Container& c)
+    virtual std::shared_ptr<void> Activate(const Container& c) const
     {
         return delegate_(c);
     }
