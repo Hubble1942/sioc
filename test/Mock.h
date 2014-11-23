@@ -10,13 +10,11 @@ class DefaultConstructable
 class NonDefaultCtor
 {
 public:
-    NonDefaultCtor(int a, int b, int c)
-        : a_(a), b_(b), c_(c)
+    explicit NonDefaultCtor(int arg0)
+        : arg0_(arg0)
     {}
 
-    int a_;
-    int b_;
-    int c_;
+    int arg0_;
 };
 
 }

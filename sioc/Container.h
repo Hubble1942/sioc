@@ -14,23 +14,23 @@ class Container : private boost::noncopyable
 {
 public:
     template<typename T>
-    void registerType()
+    void RegisterType()
     {
-        registerFactory<T>([](const Container&){ return std::make_shared<T>(); });
+        RegisterFactory<T>([](const Container&){ return std::make_shared<T>(); });
     }
 
     template<typename T>
-    void registerType(std::function<T*(const Container&)> delegate)
+    void RegisterType(std::function<T*(const Container&)> delegate)
     {
-        registerFactory<T>([delegate](const Container& c){ return std::shared_ptr<T>(delegate(c)); });
+        RegisterFactory<T>([delegate](const Container& c){ return std::shared_ptr<T>(delegate(c)); });
     }
 
     template<typename T>
-    void registerFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
+    void RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
     {}
 
     template<typename T>
-    std::shared_ptr<T> resolve() const
+    std::shared_ptr<T> Resolve() const
     {
         return std::shared_ptr<T>();
     }
