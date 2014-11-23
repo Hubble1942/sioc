@@ -52,6 +52,12 @@ public:
         return std::shared_ptr<T>();
     }
 
+    template<typename T>
+    std::vector<std::shared_ptr<T>> ResolveAll() const
+    {
+        return std::vector<std::shared_ptr<T>>();
+    }
+
 private:
     ActivatorRegistry registry_;
 };
