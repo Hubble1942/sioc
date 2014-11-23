@@ -1,6 +1,6 @@
 #pragma once
 
-namespace sioc
+namespace Sioc
 {
 
 class DefaultConstructable

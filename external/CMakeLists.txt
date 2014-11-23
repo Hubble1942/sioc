@@ -1,4 +1,4 @@
-# sioc
+# Sioc - simple inversion of control container
 # /external
 
 ###############################################################################

@@ -7,7 +7,7 @@
 
 #include "Mock.h"
 
-namespace sioc
+namespace Sioc
 {
 
 TEST(ContainerTest, SimpleRegisterResolve)

@@ -7,7 +7,7 @@
 // boost
 #include <boost/noncopyable.hpp>
 
-namespace sioc
+namespace Sioc
 {
 
 class Container : private boost::noncopyable

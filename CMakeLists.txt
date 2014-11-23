@@ -1,11 +1,11 @@
-# sioc
+# Sioc - simple inversion of control container
 # /
 
 ###############################################################################
 ### General cmake settings
 ###############################################################################
 cmake_minimum_required (VERSION 3.0 FATAL_ERROR)
-project (sioc)
+project (Sioc)
 
 ###############################################################################
 ### boost Stuff
@@ -57,5 +57,5 @@ endmacro()
 ###############################################################################
 
 add_subdirectory(external)
-add_subdirectory(sioc)
+add_subdirectory(Sioc)
 add_subdirectory(test)
