@@ -54,7 +54,7 @@ public:
 
         if (activators != nullptr)
         {
-            return activators->back()->ActivateTyped<T>(*this);
+            return std::static_pointer_cast<T>(activators->back()->Activate(*this));
         }
 
         return std::shared_ptr<T>();
@@ -70,9 +70,9 @@ public:
         {
             instances.reserve(activators->size());
 
-            for (auto& activator : *activators)
+            for (auto activator : *activators)
             {
-                instances.push_back(activator->ActivateTyped<T>(*this));
+                instances.push_back(std::static_pointer_cast<T>(activator->Activate(*this)));
             }
         }
 

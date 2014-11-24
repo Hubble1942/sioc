@@ -17,12 +17,6 @@ public:
     virtual ~IActivator() {}
 
     virtual std::shared_ptr<void> Activate(const Container&) const = 0;
-
-    template<typename T>
-    std::shared_ptr<T> ActivateTyped(const Container& c) const
-    {
-        return std::static_pointer_cast<T>(Activate(c));
-    }
 };
 
 }
