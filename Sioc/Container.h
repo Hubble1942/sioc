@@ -15,6 +15,16 @@
 namespace Sioc
 {
 
+class Foo
+{
+public:
+    template<typename T>
+    const Foo& As() const
+    {
+        return *this;
+    }
+};
+
 /// <summary>
 /// The simple inversion of control container.
 /// </summary>
@@ -25,12 +35,14 @@ public:
     /// Registers the type.
     /// </summary>
     template<typename T>
-    void RegisterType()
+    Foo RegisterType()
     {
         RegisterFactory<T>([](const Container&)
         {
             return std::make_shared<T>();
         });
+
+        return Foo();
     }
 
     /// <summary>
