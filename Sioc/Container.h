@@ -53,7 +53,7 @@ public:
     template<typename T>
     void RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
     {
-        registry_.Insert(Detail::TypeInfo::Id<T>(), std::make_shared<Detail::GenericActivator<T>>(delegate));
+        registry_.Insert(Detail::TypeInfo::Id<T>(), std::make_shared<Detail::GenericActivator>(delegate));
     }
 
     /// <summary>

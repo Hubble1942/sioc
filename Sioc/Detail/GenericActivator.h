@@ -17,11 +17,10 @@ namespace Detail
 /// <summary>
 /// Generic activator implementation holding a delegate activating the requested instance.
 /// </summary>
-template<typename T>
 class GenericActivator : public IActivator, private boost::noncopyable
 {
 public:
-    explicit GenericActivator(std::function<std::shared_ptr<T>(const Container&)> delegate)
+    explicit GenericActivator(std::function<std::shared_ptr<void>(const Container&)> delegate)
         : delegate_(delegate)
     {}
 
@@ -36,7 +35,7 @@ public:
     }
 
 private:
-    std::function<std::shared_ptr<T>(const Container&)> delegate_;
+    std::function<std::shared_ptr<void>(const Container&)> delegate_;
 };
 
 }
