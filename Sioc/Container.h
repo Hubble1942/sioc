@@ -76,9 +76,9 @@ public:
     {
         auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>());
 
-        if (activators != nullptr)
+        if (!activators.empty())
         {
-            return std::static_pointer_cast<T>(activators->back()->Activate(*this));
+            return std::static_pointer_cast<T>(activators.back()->Activate(*this));
         }
 
         return std::shared_ptr<T>();
@@ -93,14 +93,11 @@ public:
         auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>());
 
         std::vector<std::shared_ptr<T>> instances;
-        if (activators != nullptr)
-        {
-            instances.reserve(activators->size());
+        instances.reserve(activators.size());
 
-            for (auto activator : *activators)
-            {
-                instances.push_back(std::static_pointer_cast<T>(activator->Activate(*this)));
-            }
+        for (auto activator : activators)
+        {
+            instances.push_back(std::static_pointer_cast<T>(activator->Activate(*this)));
         }
 
         return instances;

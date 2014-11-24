@@ -48,21 +48,22 @@ public:
     /// Gets the activators for a specified type.
     /// </summary>
     /// <param name="id">The type identifier.</param>
-    /// <returns>The activators or <c>nullptr</c> if no activator has been found for the specified id.</returns>
-    const Activators* GetAllForType(const TypeInfo::IdType& id) const
+    /// <returns>The activators.</returns>
+    const Activators& GetAllForType(const TypeInfo::IdType& id) const
     {
         auto found = registry_.find(id);
 
         if (found != registry_.end())
         {
-            return &(found->second);
+            return found->second;
         }
 
-        return nullptr;
+        return empty_;
     }
 
 private:
     Registry registry_;
+    Activators empty_;
 };
 
 }
