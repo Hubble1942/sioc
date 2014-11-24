@@ -3,6 +3,7 @@
 // local
 #include "ActivatorRegistry.h"
 #include "SingleInstanceActivatorFacade.h"
+#include "WeakSingleInstanceActivatorFacade.h"
 
 // STL
 #include <type_traits>
@@ -35,7 +36,8 @@ public:
 
     ~RegistrationModifier()
     {
-        // the registeredIds_ is empty if we are not at the end of the modification
+        // registeredIds_ is empty if we are not at the end of the modification.
+        // the content will have been moved away.
         for (auto id : registeredIds_)
         {
             registry_.Insert(id, activator_);
@@ -58,6 +60,15 @@ public:
         assert(activator_ != nullptr);
 
         activator_ = std::make_shared<SingleInstanceActivatorFacade>(activator_);
+
+        return *this;
+    }
+
+    RegistrationModifier& WeakSingleInstance()
+    {
+        assert(activator_ != nullptr);
+
+        activator_ = std::make_shared<WeakSingleInstanceActivatorFacade>(activator_);
 
         return *this;
     }

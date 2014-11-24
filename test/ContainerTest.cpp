@@ -175,4 +175,49 @@ TEST(ContainerTest, SingleInstance)
     ASSERT_EQ(derived1, derived2);
 }
 
+TEST(ContainerTest, WeakSingleInstance)
+{
+    Container sut;
+
+    sut.RegisterType<DefaultConstructable>().WeakSingleInstance();
+
+    auto derived1 = sut.Resolve<DefaultConstructable>();
+
+    auto derived2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_EQ(derived1, derived2);
+}
+
+TEST(ContainerTest, SingleInstanceIsSingle)
+{
+    Container sut;
+
+    sut.RegisterType<DefaultConstructable>().SingleInstance();
+
+    DefaultConstructable* derived1Unsafe = 0;
+    {
+        auto derived1 = sut.Resolve<DefaultConstructable>();
+        derived1Unsafe = derived1.get();
+    }
+
+    
+    auto derived2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_EQ(derived1Unsafe, derived2.get());
+}
+
+TEST(ContainerTest, WeakSingleInstanceIsWeak)
+{
+    Container sut;
+
+    sut.RegisterType<DefaultConstructable>().WeakSingleInstance();
+
+    DefaultConstructable* derived1Unsafe = 0;
+    {
+        auto derived1 = sut.Resolve<DefaultConstructable>();
+        derived1Unsafe = derived1.get();
+    }
+
+    auto derived2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_NE(derived1Unsafe, derived2.get());
+}
+
 }
