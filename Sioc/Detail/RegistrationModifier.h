@@ -7,7 +7,7 @@
 // STL
 #include <type_traits>
 #include <cassert>
-#include <list>
+#include <unordered_set>
 
 // boost
 #include <boost/noncopyable.hpp>
@@ -48,9 +48,7 @@ public:
         assert(activator_ != nullptr);
         static_assert(std::is_base_of<T, RegisterType>::value, "T must be base of RegisterType");
 
-        auto id = TypeInfo::Id<T>();
-
-        registeredIds_.push_back(id);        
+        registeredIds_.insert(TypeInfo::Id<T>());
 
         return *this;
     }
@@ -67,7 +65,7 @@ public:
 private:
     ActivatorRegistry& registry_;
     std::shared_ptr<const IActivator> activator_;
-    std::list<TypeInfo::IdType> registeredIds_;
+    std::unordered_set<TypeInfo::IdType> registeredIds_;
 };
 
 }

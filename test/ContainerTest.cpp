@@ -102,6 +102,16 @@ TEST(ContainerTest, ResolveAllGetsAll)
     EXPECT_EQ(31415, instances[2]->arg0_);
 }
 
+TEST(ContainerTest, MultipleRegistrationsInOneAreIgnored)
+{
+    Container sut;
+
+    sut.RegisterType<Derived>().As<Base>().As<Base>().As<Base>();
+
+    auto bases = sut.ResolveAll<Base>();
+    ASSERT_EQ(1, bases.size());
+}
+
 TEST(ContainerTest, DerivedAsBase)
 {
     Container sut;
