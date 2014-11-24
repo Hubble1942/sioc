@@ -1,6 +1,7 @@
 #pragma once
 
 // local
+#include "Detail/RegistrationModifier.h"
 #include "Detail/ActivatorRegistry.h"
 #include "Detail/TypeInfo.h"
 #include "Detail/GenericActivator.h"
@@ -15,16 +16,6 @@
 namespace Sioc
 {
 
-class Foo
-{
-public:
-    template<typename T>
-    const Foo& As() const
-    {
-        return *this;
-    }
-};
-
 /// <summary>
 /// The simple inversion of control container.
 /// </summary>
@@ -35,14 +26,12 @@ public:
     /// Registers the type.
     /// </summary>
     template<typename T>
-    Foo RegisterType()
+    Detail::RegistrationModifier RegisterType()
     {
-        RegisterFactory<T>([](const Container&)
+        return RegisterFactory<T>([](const Container&)
         {
             return std::make_shared<T>();
         });
-
-        return Foo();
     }
 
     /// <summary>
@@ -50,9 +39,9 @@ public:
     /// </summary>
     /// <param name="delegate">The delegate constructing the instance.</param>
     template<typename T>
-    void RegisterType(std::function<T*(const Container&)> delegate)
+    Detail::RegistrationModifier RegisterType(std::function<T*(const Container&)> delegate)
     {
-        RegisterFactory<T>([delegate](const Container & c)
+        return RegisterFactory<T>([delegate](const Container & c)
         {
             return std::shared_ptr<T>(delegate(c));
         });
@@ -63,9 +52,14 @@ public:
     /// </summary>
     /// <param name="delegate">The delegate constructing the instance.</param>
     template<typename T>
-    void RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
+    Detail::RegistrationModifier RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
     {
-        registry_.Insert(Detail::TypeInfo::Id<T>(), std::make_shared<Detail::GenericActivator>(delegate));
+        auto activator = std::make_shared<Detail::GenericActivator>(delegate);
+        Detail::RegistrationModifier registrationModifier(registry_, activator);
+
+        registrationModifier.As<T>();
+
+        return registrationModifier;
     }
 
     /// <summary>
