@@ -13,7 +13,7 @@ namespace Sioc
 TEST(ContainerTest, SimpleRegisterResolve)
 {
     Container sut;
-    
+
     sut.RegisterType<DefaultConstructable>();
 
     auto instance = sut.Resolve<DefaultConstructable>();
@@ -25,7 +25,10 @@ TEST(ContainerTest, InjectSomeArguments)
 {
     Container sut;
 
-    sut.RegisterType<NonDefaultCtor>([](const Container&){ return new NonDefaultCtor(42); });
+    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    {
+        return new NonDefaultCtor(42);
+    });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
 
@@ -37,7 +40,10 @@ TEST(ContainerTest, FactoryMethod)
 {
     Container sut;
 
-    sut.RegisterFactory<NonDefaultCtor>([](const Container&){ return std::make_shared<NonDefaultCtor>(4711); });
+    sut.RegisterFactory<NonDefaultCtor>([](const Container&)
+    {
+        return std::make_shared<NonDefaultCtor>(4711);
+    });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
 
@@ -49,9 +55,18 @@ TEST(ContainerTest, MultipleRegistrationToSameTypeResolvesToLast)
 {
     Container sut;
 
-    sut.RegisterType<NonDefaultCtor>([](const Container&){ return new NonDefaultCtor(42); });
-    sut.RegisterType<NonDefaultCtor>([](const Container&){ return new NonDefaultCtor(4711); });
-    sut.RegisterType<NonDefaultCtor>([](const Container&){ return new NonDefaultCtor(31415); });
+    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    {
+        return new NonDefaultCtor(42);
+    });
+    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    {
+        return new NonDefaultCtor(4711);
+    });
+    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    {
+        return new NonDefaultCtor(31415);
+    });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
 
@@ -63,9 +78,18 @@ TEST(ContainerTest, ResolveAllGetsAll)
 {
     Container sut;
 
-    sut.RegisterType<NonDefaultCtor>([](const Container&){ return new NonDefaultCtor(42); });
-    sut.RegisterType<NonDefaultCtor>([](const Container&){ return new NonDefaultCtor(4711); });
-    sut.RegisterType<NonDefaultCtor>([](const Container&){ return new NonDefaultCtor(31415); });
+    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    {
+        return new NonDefaultCtor(42);
+    });
+    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    {
+        return new NonDefaultCtor(4711);
+    });
+    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    {
+        return new NonDefaultCtor(31415);
+    });
 
     auto instances = sut.ResolveAll<NonDefaultCtor>();
 
@@ -77,4 +101,18 @@ TEST(ContainerTest, ResolveAllGetsAll)
     ASSERT_NE(nullptr, instances[2]);
     EXPECT_EQ(31415, instances[2]->arg0_);
 }
+
+TEST(ContainerTest, DerivedAsBase)
+{
+    Container sut;
+
+    sut.RegisterType<Derived>().As<Base>();
+
+    auto base = sut.Resolve<Base>();
+    ASSERT_NE(nullptr, base);
+
+    auto derived = std::dynamic_pointer_cast<Derived>(base);
+    ASSERT_NE(nullptr, derived);
+}
+
 }

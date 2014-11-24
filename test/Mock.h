@@ -17,4 +17,14 @@ public:
     int arg0_;
 };
 
+class Base
+{
+public:
+    virtual ~Base() {}
+};
+
+class Derived : public Base
+{
+};
+
 }
