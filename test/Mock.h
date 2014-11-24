@@ -23,7 +23,11 @@ public:
     virtual ~Base() {}
 };
 
-class Derived : public Base
+class Middle : public Base
+{
+};
+
+class Derived : public Middle
 {
 };
 

@@ -3,6 +3,9 @@
 // local
 #include "ActivatorRegistry.h"
 
+// STL
+#include <type_traits>
+
 // boost
 #include <boost/noncopyable.hpp>
 
@@ -11,6 +14,7 @@ namespace Sioc
 namespace Detail
 {
 
+template<typename RegisterType>
 class RegistrationModifier : private boost::noncopyable
 {
 public:
@@ -28,6 +32,8 @@ public:
     template<typename T>
     RegistrationModifier& As()
     {
+        static_assert(std::is_base_of<T, RegisterType>::value, "T must be base of RegisterType");
+
         registry_.Insert(TypeInfo::Id<T>(), activator_);
 
         return *this;

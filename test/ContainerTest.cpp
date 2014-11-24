@@ -115,4 +115,20 @@ TEST(ContainerTest, DerivedAsBase)
     ASSERT_NE(nullptr, derived);
 }
 
+TEST(ContainerTest, DerivedAsMiddleAndBase)
+{
+    Container sut;
+
+    sut.RegisterType<Derived>().As<Middle>().As<Base>();
+
+    auto base = sut.Resolve<Base>();
+    ASSERT_NE(nullptr, base);
+
+    auto middle = std::dynamic_pointer_cast<Middle>(base);
+    ASSERT_NE(nullptr, middle);
+
+    auto derived = std::dynamic_pointer_cast<Derived>(base);
+    ASSERT_NE(nullptr, derived);
+}
+
 }

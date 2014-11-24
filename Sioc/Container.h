@@ -26,7 +26,7 @@ public:
     /// Registers the type.
     /// </summary>
     template<typename T>
-    Detail::RegistrationModifier RegisterType()
+    Detail::RegistrationModifier<T> RegisterType()
     {
         return RegisterFactory<T>([](const Container&)
         {
@@ -39,7 +39,7 @@ public:
     /// </summary>
     /// <param name="delegate">The delegate constructing the instance.</param>
     template<typename T>
-    Detail::RegistrationModifier RegisterType(std::function<T*(const Container&)> delegate)
+    Detail::RegistrationModifier<T> RegisterType(std::function<T*(const Container&)> delegate)
     {
         return RegisterFactory<T>([delegate](const Container & c)
         {
@@ -52,10 +52,10 @@ public:
     /// </summary>
     /// <param name="delegate">The delegate constructing the instance.</param>
     template<typename T>
-    Detail::RegistrationModifier RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
+    Detail::RegistrationModifier<T> RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
     {
         auto activator = std::make_shared<Detail::GenericActivator>(delegate);
-        Detail::RegistrationModifier registrationModifier(registry_, activator);
+        Detail::RegistrationModifier<T> registrationModifier(registry_, activator);
 
         registrationModifier.As<T>();
 
