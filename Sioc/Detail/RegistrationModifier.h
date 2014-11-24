@@ -1,14 +1,10 @@
 #pragma once
 
 // local
-#include "ActivatorRegistry.h"
-#include "SingleInstanceActivatorFacade.h"
-#include "WeakSingleInstanceActivatorFacade.h"
+#include "Registration.h"
 
 // STL
 #include <type_traits>
-#include <cassert>
-#include <unordered_set>
 
 // boost
 #include <boost/noncopyable.hpp>
@@ -23,60 +19,39 @@ class RegistrationModifier : private boost::noncopyable
 {
 public:
     RegistrationModifier(ActivatorRegistry& registry, std::shared_ptr<IActivator> activator)
-        : registry_(registry),
-        activator_(activator),
-        registeredIds_()
+        : registration_(registry, activator)
     {}
 
     RegistrationModifier(RegistrationModifier&& other)
-        : registry_(other.registry_),
-        activator_(std::move(other.activator_)),
-        registeredIds_(std::move(other.registeredIds_))
+        : registration_(std::move(other.registration_))
     {}
-
-    ~RegistrationModifier()
-    {
-        // registeredIds_ is empty if we are not at the end of the modification.
-        // the content will have been moved away.
-        for (auto id : registeredIds_)
-        {
-            registry_.Insert(id, activator_);
-        }
-    }
 
     template<typename T>
     RegistrationModifier& As()
     {
-        assert(activator_ != nullptr);
         static_assert(std::is_base_of<T, RegisterType>::value, "T must be base of RegisterType");
 
-        registeredIds_.insert(TypeInfo::Id<T>());
+        registration_.As(TypeInfo::Id<T>());
 
         return *this;
     }
 
     RegistrationModifier& SingleInstance()
     {
-        assert(activator_ != nullptr);
-
-        activator_ = std::make_shared<SingleInstanceActivatorFacade>(activator_);
+        registration_.SingleInstance();
 
         return *this;
     }
 
     RegistrationModifier& WeakSingleInstance()
     {
-        assert(activator_ != nullptr);
-
-        activator_ = std::make_shared<WeakSingleInstanceActivatorFacade>(activator_);
+        registration_.WeakSingleInstance();
 
         return *this;
     }
 
 private:
-    ActivatorRegistry& registry_;
-    std::shared_ptr<const IActivator> activator_;
-    std::unordered_set<TypeInfo::IdType> registeredIds_;
+    Registration registration_;
 };
 
 }
