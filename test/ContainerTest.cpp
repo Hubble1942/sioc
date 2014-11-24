@@ -131,4 +131,38 @@ TEST(ContainerTest, DerivedAsMiddleAndBase)
     ASSERT_NE(nullptr, derived);
 }
 
+TEST(ContainerTest, AsKeepsOriginalRegistration)
+{
+    Container sut;
+
+    sut.RegisterType<Derived>().As<Base>();
+
+    auto derived = sut.Resolve<Derived>();
+    ASSERT_NE(nullptr, derived);
+}
+
+TEST(ContainerTest, DefaultTransientInstance)
+{
+    Container sut;
+
+    sut.RegisterType<DefaultConstructable>();
+
+    auto derived1 = sut.Resolve<DefaultConstructable>();
+
+    auto derived2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_NE(derived1, derived2);
+}
+
+TEST(ContainerTest, SingleInstance)
+{
+    Container sut;
+
+    sut.RegisterType<DefaultConstructable>().SingleInstance();
+
+    auto derived1 = sut.Resolve<DefaultConstructable>();
+
+    auto derived2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_EQ(derived1, derived2);
+}
+
 }

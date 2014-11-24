@@ -39,6 +39,11 @@ public:
         return *this;
     }
 
+    RegistrationModifier& SingleInstance()
+    {
+        return *this;
+    }
+
 private:
     ActivatorRegistry& registry_;
     std::shared_ptr<const IActivator> activator_;
