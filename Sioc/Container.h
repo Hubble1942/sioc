@@ -26,13 +26,19 @@ public:
     template<typename T>
     void RegisterType()
     {
-        RegisterFactory<T>([](const Container&){ return std::make_shared<T>(); });
+        RegisterFactory<T>([](const Container&)
+        {
+            return std::make_shared<T>();
+        });
     }
 
     template<typename T>
     void RegisterType(std::function<T*(const Container&)> delegate)
     {
-        RegisterFactory<T>([delegate](const Container& c){ return std::shared_ptr<T>(delegate(c)); });
+        RegisterFactory<T>([delegate](const Container & c)
+        {
+            return std::shared_ptr<T>(delegate(c));
+        });
     }
 
     template<typename T>
@@ -48,7 +54,7 @@ public:
 
         if (activators != nullptr)
         {
-            return activators->back()->Activate<T>(*this);
+            return activators->back()->ActivateTyped<T>(*this);
         }
 
         return std::shared_ptr<T>();
@@ -66,7 +72,7 @@ public:
 
             for (auto& activator : *activators)
             {
-                instances.push_back(activator->Activate<T>(*this));
+                instances.push_back(activator->ActivateTyped<T>(*this));
             }
         }
 
