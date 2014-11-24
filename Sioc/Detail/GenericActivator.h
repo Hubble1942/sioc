@@ -14,6 +14,9 @@ namespace Sioc
 namespace Detail
 {
 
+/// <summary>
+/// Generic activator implementation holding a delegate activating the requested instance.
+/// </summary>
 template<typename T>
 class GenericActivator : public IActivator, private boost::noncopyable
 {
@@ -22,9 +25,14 @@ public:
         : delegate_(delegate)
     {}
 
-    virtual std::shared_ptr<void> Activate(const Container& c) const
+    /// <summary>
+    /// Activates the embedded instance.
+    /// </summary>
+    /// <param name="container">The ioc container.</param>
+    /// <returns>The activated instance.</returns>
+    virtual std::shared_ptr<void> Activate(const Container& container) const
     {
-        return delegate_(c);
+        return delegate_(container);
     }
 
 private:

@@ -14,7 +14,10 @@ namespace Detail
 
 TEST(GenericActivatorTest, JustActivate)
 {
-    GenericActivator<DefaultConstructable> sut([](const Container&){ return std::make_shared<DefaultConstructable>(); });
+    GenericActivator<DefaultConstructable> sut([](const Container&)
+    {
+        return std::make_shared<DefaultConstructable>();
+    });
     Container container;
 
     auto instance = sut.Activate(container);
@@ -24,7 +27,10 @@ TEST(GenericActivatorTest, JustActivate)
 
 TEST(GenericActivatorTest, ActivateNonDefaultCtorable)
 {
-    GenericActivator<NonDefaultCtor> sut([](const Container&){ return std::make_shared<NonDefaultCtor>(42); });
+    GenericActivator<NonDefaultCtor> sut([](const Container&)
+    {
+        return std::make_shared<NonDefaultCtor>(42);
+    });
     Container container;
 
     auto instance = sut.Activate(container);

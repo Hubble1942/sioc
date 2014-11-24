@@ -21,6 +21,9 @@ namespace Sioc
 class Container : private boost::noncopyable
 {
 public:
+    /// <summary>
+    /// Registers the type.
+    /// </summary>
     template<typename T>
     void RegisterType()
     {
@@ -30,6 +33,10 @@ public:
         });
     }
 
+    /// <summary>
+    /// Registers the type.
+    /// </summary>
+    /// <param name="delegate">The delegate constructing the instance.</param>
     template<typename T>
     void RegisterType(std::function<T*(const Container&)> delegate)
     {
@@ -39,12 +46,19 @@ public:
         });
     }
 
+    /// <summary>
+    /// Registers the factory.
+    /// </summary>
+    /// <param name="delegate">The delegate constructing the instance.</param>
     template<typename T>
     void RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
     {
         registry_.Insert(Detail::TypeInfo::Id<T>(), std::make_shared<Detail::GenericActivator<T>>(delegate));
     }
 
+    /// <summary>
+    /// Resolves an instance of a specified type.
+    /// </summary>
     template<typename T>
     std::shared_ptr<T> Resolve() const
     {
@@ -58,6 +72,9 @@ public:
         return std::shared_ptr<T>();
     }
 
+    /// <summary>
+    /// Resolves all instances of a specified type.
+    /// </summary>
     template<typename T>
     std::vector<std::shared_ptr<T>> ResolveAll() const
     {
