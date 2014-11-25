@@ -64,6 +64,6 @@ To build and run the tests, you'll need CMake >= 3.0::
 
 
 License
------
+-------
 
 Sioc is released under the `MIT License <http://www.opensource.org/licenses/MIT>`_.
