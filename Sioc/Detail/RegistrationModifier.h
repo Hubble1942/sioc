@@ -55,6 +55,12 @@ public:
         return *this;
     }
 
+    template<typename T>
+    RegistrationModifier& Named(const std::string& name)
+    {
+        return *this;
+    }
+
     RegistrationModifier& SingleInstance()
     {
         assert(activator_ != nullptr);

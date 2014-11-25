@@ -157,10 +157,10 @@ TEST(ContainerTest, DefaultTransientInstance)
 
     sut.RegisterType<DefaultConstructable>();
 
-    auto derived1 = sut.Resolve<DefaultConstructable>();
+    auto instance1 = sut.Resolve<DefaultConstructable>();
 
-    auto derived2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_NE(derived1, derived2);
+    auto instance2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_NE(instance1, instance2);
 }
 
 TEST(ContainerTest, SingleInstance)
@@ -169,10 +169,10 @@ TEST(ContainerTest, SingleInstance)
 
     sut.RegisterType<DefaultConstructable>().SingleInstance();
 
-    auto derived1 = sut.Resolve<DefaultConstructable>();
+    auto instance1 = sut.Resolve<DefaultConstructable>();
 
-    auto derived2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_EQ(derived1, derived2);
+    auto instance2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_EQ(instance1, instance2);
 }
 
 TEST(ContainerTest, WeakSingleInstance)
@@ -181,10 +181,10 @@ TEST(ContainerTest, WeakSingleInstance)
 
     sut.RegisterType<DefaultConstructable>().WeakSingleInstance();
 
-    auto derived1 = sut.Resolve<DefaultConstructable>();
+    auto instance1 = sut.Resolve<DefaultConstructable>();
 
-    auto derived2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_EQ(derived1, derived2);
+    auto instance2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_EQ(instance1, instance2);
 }
 
 TEST(ContainerTest, SingleInstanceIsSingle)
@@ -193,15 +193,15 @@ TEST(ContainerTest, SingleInstanceIsSingle)
 
     sut.RegisterType<DefaultConstructable>().SingleInstance();
 
-    DefaultConstructable* derived1Unsafe = 0;
+    DefaultConstructable* instance1Unsafe = 0;
     {
-        auto derived1 = sut.Resolve<DefaultConstructable>();
-        derived1Unsafe = derived1.get();
+        auto instance1 = sut.Resolve<DefaultConstructable>();
+        instance1Unsafe = instance1.get();
     }
 
     
-    auto derived2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_EQ(derived1Unsafe, derived2.get());
+    auto instance2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_EQ(instance1Unsafe, instance2.get());
 }
 
 TEST(ContainerTest, WeakSingleInstanceIsWeak)
@@ -210,14 +210,99 @@ TEST(ContainerTest, WeakSingleInstanceIsWeak)
 
     sut.RegisterType<DefaultConstructable>().WeakSingleInstance();
 
-    DefaultConstructable* derived1Unsafe = 0;
+    DefaultConstructable* instance1Unsafe = 0;
     {
-        auto derived1 = sut.Resolve<DefaultConstructable>();
-        derived1Unsafe = derived1.get();
+        auto instance1 = sut.Resolve<DefaultConstructable>();
+        instance1Unsafe = instance1.get();
     }
 
-    auto derived2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_NE(derived1Unsafe, derived2.get());
+    auto instance2 = sut.Resolve<DefaultConstructable>();
+    ASSERT_NE(instance1Unsafe, instance2.get());
+}
+
+TEST(ContainerTest, NamedRightNameGivesInstance)
+{
+    Container sut;
+
+    sut.RegisterType<DefaultConstructable>().Named<DefaultConstructable>("Foo");
+
+    auto instance = sut.ResolveNamed<DefaultConstructable>("Foo");
+
+    ASSERT_NE(nullptr, instance);
+}
+
+TEST(ContainerTest, NamedWrongNameNoInstance)
+{
+    Container sut;
+
+    sut.RegisterType<DefaultConstructable>().Named<DefaultConstructable>("Foo");
+
+    auto instance = sut.ResolveNamed<DefaultConstructable>("Bar");
+
+    ASSERT_EQ(nullptr, instance);
+}
+
+TEST(ContainerTest, NamedIsStillAccessibleWithoutName)
+{
+    Container sut;
+
+    sut.RegisterType<DefaultConstructable>().Named<DefaultConstructable>("Foo");
+
+    auto instance = sut.Resolve<DefaultConstructable>();
+
+    ASSERT_NE(nullptr, instance);
+}
+
+TEST(ContainerTest, CtorInjectRaw)
+{
+    Container sut;
+
+    sut.RegisterType<Derived>().As<Base>();
+    sut.RegisterType<BaseHolder>([](const Container& c){ return new BaseHolder(c.Resolve<Base>()); });
+
+    auto instance = sut.Resolve<BaseHolder>();
+
+    ASSERT_NE(nullptr, instance);
+    EXPECT_NE(nullptr, instance->base_);
+}
+
+TEST(ContainerTest, CtorInjectWithCreateMacro)
+{
+    Container sut;
+
+    sut.RegisterType<Derived>().As<Base>();
+    sut.RegisterType<BaseHolder>(CREATE(new BaseHolder(c.Resolve<Base>())));
+
+    auto instance = sut.Resolve<BaseHolder>();
+
+    ASSERT_NE(nullptr, instance);
+    EXPECT_NE(nullptr, instance->base_);
+}
+
+TEST(ContainerTest, CtorInjectWithInjectMacro)
+{
+    Container sut;
+
+    sut.RegisterType<Derived>().As<Base>();
+    sut.RegisterType<BaseHolder>([](const Container& c){ return new BaseHolder(INJECT(Base)); });
+
+    auto instance = sut.Resolve<BaseHolder>();
+
+    ASSERT_NE(nullptr, instance);
+    EXPECT_NE(nullptr, instance->base_);
+}
+
+TEST(ContainerTest, CtorInjectWithMacro)
+{
+    Container sut;
+
+    sut.RegisterType<Derived>().As<Base>();
+    sut.RegisterType<BaseHolder>(CREATE(new BaseHolder(INJECT(Base))));
+
+    auto instance = sut.Resolve<BaseHolder>();
+
+    ASSERT_NE(nullptr, instance);
+    EXPECT_NE(nullptr, instance->base_);
 }
 
 }

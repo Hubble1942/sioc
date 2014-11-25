@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 namespace Sioc
 {
 
@@ -29,6 +31,16 @@ class Middle : public Base
 
 class Derived : public Middle
 {
+};
+
+class BaseHolder
+{
+public:
+    explicit BaseHolder(std::shared_ptr<Base> base)
+        : base_(base)
+    {}
+
+    std::shared_ptr<Base> base_;
 };
 
 }

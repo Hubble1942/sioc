@@ -98,8 +98,27 @@ public:
         return instances;
     }
 
+    /// <summary>
+    /// Resolves an instances of a specified type for a specified name.
+    /// </summary>
+    template<typename T>
+    std::shared_ptr<T> ResolveNamed(const std::string& name) const
+    {
+        auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>());
+
+        if (!activators.empty())
+        {
+            return std::static_pointer_cast<T>(activators.back()->Activate(*this));
+        }
+
+        return std::shared_ptr<T>();
+    }
+
 private:
     Detail::ActivatorRegistry registry_;
 };
+
+#define CREATE(statement) [](const Sioc::Container& c) -> decltype(statement) { return statement; }
+#define INJECT(type) c.Resolve<type>()
 
 }
