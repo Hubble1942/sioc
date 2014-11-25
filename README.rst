@@ -9,6 +9,7 @@ The bullet list:
 * Requires C++11
 * With a tiny bit of help from boost
 * Some ideas borrowed from `Autofac <http://autofac.org/>`_ and `Hypodermic <https://github.com/ybainier/Hypodermic>`_
+* Tested with GCC and Visual Studio 2013
 
 Main Goals
 ----------
