@@ -57,6 +57,18 @@ TEST(ContainerTest, InjectSomeArguments)
     EXPECT_EQ(42, instance->arg0_);
 }
 
+TEST(ContainerTest, InjectSomeArgumentsMacro)
+{
+    Container sut;
+
+    sut.RegisterType<NonDefaultCtor>([](const Container&) { return new NonDefaultCtor(42); });
+
+    auto instance = sut.Resolve<NonDefaultCtor>();
+
+    ASSERT_NE(nullptr, instance);
+    EXPECT_EQ(42, instance->arg0_);
+}
+
 TEST(ContainerTest, FactoryMethod)
 {
     Container sut;
