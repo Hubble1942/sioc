@@ -5,18 +5,18 @@ Yet another IoC container for C++ ...
 
 The bullet list:
 
-    - Header only
-    - Requires C++11
-    - With a tiny bit of help from boost
-    - Some ideas borrowed from `Autofac <http://autofac.org/>`_ and `Hypodermic <https://github.com/ybainier/Hypodermic>`_
+* Header only
+* Requires C++11
+* With a tiny bit of help from boost
+* Some ideas borrowed from `Autofac <http://autofac.org/>`_ and `Hypodermic <https://github.com/ybainier/Hypodermic>`_
 
 Main Goals
 ----------
 
-    - Keep it simple
-    - Provide all features I currently require at work
-    - Be mainly finished after 4 evenings
-    - Keep it simple
+* Keep it simple
+* Provide all features I currently require at work
+* Be mainly finished after 4 evenings
+* Keep it simple
 
 Usage
 -----
