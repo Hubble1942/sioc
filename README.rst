@@ -1,7 +1,7 @@
 Welcome to Sioc - The Simple IoC Container
 ==========================================
 
-Yet another IoC container for C++ ...
+Yet another IoC container for C++
 
 The bullet list:
 
