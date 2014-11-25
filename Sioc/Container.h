@@ -9,6 +9,7 @@
 // STL
 #include <memory>
 #include <functional>
+#include <vector>
 
 // boost
 #include <boost/noncopyable.hpp>
@@ -57,7 +58,7 @@ public:
         auto activator = std::make_shared<Detail::GenericActivator>(delegate);
         Detail::RegistrationModifier<T> registrationModifier(registry_, activator);
 
-        registrationModifier.As<T>();
+        registrationModifier.template As<T>();
 
         return registrationModifier;
     }
