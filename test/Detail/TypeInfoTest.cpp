@@ -13,14 +13,26 @@ namespace Detail
 
 TEST(TypeInfoTest, SameTypeSameInfo)
 {
-    ASSERT_EQ(TypeInfo::Id<DefaultConstructable>(), TypeInfo::Id<DefaultConstructable>());
-    ASSERT_EQ(TypeInfo::Id<NonDefaultCtor>(), TypeInfo::Id<NonDefaultCtor>());
+    EXPECT_EQ(TypeInfo::Id<DefaultConstructable>(""), TypeInfo::Id<DefaultConstructable>(""));
+    EXPECT_EQ(TypeInfo::Id<NonDefaultCtor>(""), TypeInfo::Id<NonDefaultCtor>(""));
 }
 
 TEST(TypeInfoTest, DifferentTypeDifferentInfo)
 {
-    ASSERT_NE(TypeInfo::Id<DefaultConstructable>(), TypeInfo::Id<NonDefaultCtor>());
-    ASSERT_NE(TypeInfo::Id<NonDefaultCtor>(), TypeInfo::Id<DefaultConstructable>());
+    EXPECT_NE(TypeInfo::Id<DefaultConstructable>(""), TypeInfo::Id<NonDefaultCtor>(""));
+    EXPECT_NE(TypeInfo::Id<NonDefaultCtor>(""), TypeInfo::Id<DefaultConstructable>(""));
+}
+
+TEST(TypeInfoTest, SameNameSameInfo)
+{
+    EXPECT_EQ(TypeInfo::Id<DefaultConstructable>("Foo"), TypeInfo::Id<DefaultConstructable>("Foo"));
+    EXPECT_EQ(TypeInfo::Id<NonDefaultCtor>("Bar"), TypeInfo::Id<NonDefaultCtor>("Bar"));
+}
+
+TEST(TypeInfoTest, DifferentNameDifferentInfo)
+{
+    EXPECT_NE(TypeInfo::Id<DefaultConstructable>("Foo"), TypeInfo::Id<DefaultConstructable>("Bar"));
+    EXPECT_NE(TypeInfo::Id<NonDefaultCtor>("Bar"), TypeInfo::Id<NonDefaultCtor>("Foo"));
 }
 
 }

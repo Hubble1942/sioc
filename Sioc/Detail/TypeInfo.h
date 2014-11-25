@@ -3,6 +3,8 @@
 // STL
 #include <typeinfo>
 #include <typeindex>
+#include <utility>
+#include <string>
 
 namespace Sioc
 {
@@ -18,7 +20,7 @@ public:
     /// <summary>
     /// The type-identifier type.
     /// </summary>
-    typedef std::type_index IdType;
+    typedef std::pair<std::type_index, std::string> IdType;
 
 private:
     TypeInfo();
@@ -28,9 +30,9 @@ public:
     /// Returns the identifier of the given type.
     /// </summary>
     template<typename T>
-    static IdType Id()
+    static IdType Id(const std::string& name)
     {
-        return std::type_index(typeid(T));
+        return std::make_pair(std::type_index(typeid(T)), name);
     }
 };
 

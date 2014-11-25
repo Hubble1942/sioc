@@ -10,6 +10,7 @@
 
 // boost
 #include <boost/noncopyable.hpp>
+#include <boost/functional/hash.hpp>
 
 namespace Sioc
 {
@@ -31,7 +32,7 @@ public:
     typedef std::list<std::shared_ptr<const Detail::IActivator>> Activators;
 
 private:
-    typedef std::unordered_map<Detail::TypeInfo::IdType, Activators> Registry;
+    typedef std::unordered_map<Detail::TypeInfo::IdType, Activators, boost::hash<Detail::TypeInfo::IdType>> Registry;
 
 public:
     /// <summary>

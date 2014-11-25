@@ -47,17 +47,17 @@ public:
     template<typename T>
     RegistrationModifier& As()
     {
-        assert(activator_ != nullptr);
-        static_assert(std::is_base_of<T, RegisterType>::value, "T must be base of RegisterType");
-
-        registeredIds_.insert(TypeInfo::Id<T>());
-
-        return *this;
+        return Named<T>("");
     }
 
     template<typename T>
     RegistrationModifier& Named(const std::string& name)
     {
+        assert(activator_ != nullptr);
+        static_assert(std::is_base_of<T, RegisterType>::value, "T must be base of RegisterType");
+
+        registeredIds_.insert(TypeInfo::Id<T>(name));
+
         return *this;
     }
 
@@ -82,7 +82,7 @@ public:
 private:
     ActivatorRegistry& registry_;
     std::shared_ptr<const IActivator> activator_;
-    std::unordered_set<TypeInfo::IdType> registeredIds_;
+    std::unordered_set<TypeInfo::IdType, boost::hash<Detail::TypeInfo::IdType>> registeredIds_;
 };
 
 }

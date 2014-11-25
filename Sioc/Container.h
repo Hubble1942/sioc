@@ -69,7 +69,16 @@ public:
     template<typename T>
     std::shared_ptr<T> Resolve() const
     {
-        auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>());
+        return ResolveNamed<T>("");
+    }
+
+    /// <summary>
+    /// Resolves an instances of a specified type for a specified name.
+    /// </summary>
+    template<typename T>
+    std::shared_ptr<T> ResolveNamed(const std::string& name) const
+    {
+        auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(name));
 
         if (!activators.empty())
         {
@@ -85,7 +94,7 @@ public:
     template<typename T>
     std::vector<std::shared_ptr<T>> ResolveAll() const
     {
-        auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>());
+        auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(""));
 
         std::vector<std::shared_ptr<T>> instances;
         instances.reserve(activators.size());
@@ -96,22 +105,6 @@ public:
         }
 
         return instances;
-    }
-
-    /// <summary>
-    /// Resolves an instances of a specified type for a specified name.
-    /// </summary>
-    template<typename T>
-    std::shared_ptr<T> ResolveNamed(const std::string& name) const
-    {
-        auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>());
-
-        if (!activators.empty())
-        {
-            return std::static_pointer_cast<T>(activators.back()->Activate(*this));
-        }
-
-        return std::shared_ptr<T>();
     }
 
 private:
