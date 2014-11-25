@@ -21,30 +21,22 @@ Main Goals
 Usage
 -----
 
-To start using Sioc, you will need to include it:
-
-.. code:: cpp
+To start using Sioc, you will need to include it::
 
     #include <Sioc/Container.h>
 
-Create an instance of the Container:
-
-.. code:: cpp
+Create an instance of the Container::
 
     Sioc::Container container;
     
-And register some types:
-
-.. code:: cpp
+And register some types::
 
     container.RegisterType<DefaultConstructable>();
     container.RegisterType<NonDefaultCtor>([](const Container&) { return new NonDefaultCtor(42); });
     container.RegisterType<Derived>().Named<Middle>("Foo").As<Base>().SingleInstance();
     container.RegisterType<BaseHolder>(CREATE(new BaseHolder(INJECT(Base)))).WeakSingleInstance();
     
-Now you're ready to resolv'em:
-
-.. code:: cpp
+Now you're ready to resolv'em::
 
     auto a = container.Resolve<DefaultConstructable>();
     auto b = container.ResolveNamed<Middle>("Foo");
