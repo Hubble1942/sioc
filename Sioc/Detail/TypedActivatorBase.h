@@ -19,50 +19,43 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+#pragma once
 
-// framework
-#include <gtest/gtest.h>
-
-// sut
-#include <Sioc/Detail/GenericActivator.h>
-
-#include <Sioc/Container.h>
-#include <test/Mock.h>
+#include "IActivator.h"
 
 namespace Sioc
 {
+
+// forwards
+class Container;
+
 namespace Detail
 {
 
-TEST(GenericActivatorTest, JustActivate)
+/// <summary>
+/// Generic interface for activators for a specific type.
+/// </summary>
+template<typename T>
+class TypedActivatorBase : public IActivator
 {
-    GenericActivator sut([](const Container&)
+public:
+    /// <summary>
+    /// Activates the embedded instance.
+    /// </summary>
+    /// <param name="container">The ioc container.</param>
+    /// <returns>The activated instance.</returns>
+    virtual std::shared_ptr<void> Activate(const Container& container) const
     {
-        return std::make_shared<DefaultConstructable>();
-    });
-    Container container;
+        return std::static_pointer_cast<void>(ActivateTyped(container));
+    }
 
-    auto instance = sut.Activate(container);
-
-    ASSERT_NE(nullptr, instance);
-}
-
-TEST(GenericActivatorTest, ActivateNonDefaultCtorable)
-{
-    GenericActivator sut([](const Container&)
-    {
-        return std::make_shared<NonDefaultCtor>(42);
-    });
-    Container container;
-
-    auto instance = sut.Activate(container);
-
-    ASSERT_NE(nullptr, instance);
-    auto instanceAgain = std::static_pointer_cast<NonDefaultCtor>(instance);
-
-    ASSERT_NE(nullptr, instanceAgain);
-    EXPECT_EQ(42, instanceAgain->arg0_);
-}
+    /// <summary>
+    /// Activates the embedded instance.
+    /// </summary>
+    /// <param name="container">The ioc container.</param>
+    /// <returns>The activated instance.</returns>
+    virtual std::shared_ptr<T> ActivateTyped(const Container& container) const = 0;
+};
 
 }
 }

@@ -22,10 +22,10 @@
 #pragma once
 
 // local
+#include "Detail/InstanceFactory.h"
 #include "Detail/RegistrationModifier.h"
 #include "Detail/ActivatorRegistry.h"
 #include "Detail/TypeInfo.h"
-#include "Detail/GenericActivator.h"
 
 // STL
 #include <memory>
@@ -76,8 +76,9 @@ public:
     template<typename T>
     Detail::RegistrationModifier<T> RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
     {
-        auto activator = std::make_shared<Detail::GenericActivator>(delegate);
-        Detail::RegistrationModifier<T> registrationModifier(registry_, activator);
+        auto instanceFactory = std::make_shared<Detail::InstanceFactory<T>>(delegate);
+
+        Detail::RegistrationModifier<T> registrationModifier(registry_, instanceFactory);
 
         registrationModifier.template As<T>();
 

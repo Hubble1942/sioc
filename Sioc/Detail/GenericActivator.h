@@ -22,7 +22,7 @@
 #pragma once
 
 // local
-#include "IActivator.h"
+#include "TypedActivatorBase.h"
 
 // STL
 #include <functional>
@@ -38,25 +38,21 @@ namespace Detail
 /// <summary>
 /// Generic activator implementation holding a delegate activating the requested instance.
 /// </summary>
-class GenericActivator : public IActivator, private boost::noncopyable
+template<typename T>
+class GenericActivator : public TypedActivatorBase<T>, private boost::noncopyable
 {
 public:
-    explicit GenericActivator(std::function<std::shared_ptr<void>(const Container&)> delegate)
+    explicit GenericActivator(std::function<std::shared_ptr<T>(const Container&)> delegate)
         : delegate_(delegate)
     {}
 
-    /// <summary>
-    /// Activates the embedded instance.
-    /// </summary>
-    /// <param name="container">The ioc container.</param>
-    /// <returns>The activated instance.</returns>
-    virtual std::shared_ptr<void> Activate(const Container& container) const
+    virtual std::shared_ptr<T> ActivateTyped(const Container& container) const
     {
         return delegate_(container);
     }
 
 private:
-    std::function<std::shared_ptr<void>(const Container&)> delegate_;
+    std::function<std::shared_ptr<T>(const Container&)> delegate_;
 };
 
 }
