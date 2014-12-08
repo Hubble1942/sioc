@@ -28,7 +28,7 @@
 
 // STL
 #include <type_traits>
-#include <cassert>
+#include <unordered_map>
 
 // boost
 #include <boost/noncopyable.hpp>
@@ -41,19 +41,27 @@ namespace Detail
 template<typename RegisterType>
 class RegistrationModifier : private boost::noncopyable
 {
+private:
+    typedef std::unordered_map<Detail::TypeInfo::IdType, std::shared_ptr<const IActivator>, boost::hash<Detail::TypeInfo::IdType>> Activators;
+
 public:
-    RegistrationModifier(ActivatorRegistry& registry, std::shared_ptr<const InstanceFactory<RegisterType>> instanceFactory)
+    RegistrationModifier(ActivatorRegistry& registry, std::shared_ptr<InstanceFactory<RegisterType>> instanceFactory)
         : registry_(registry),
           instanceFactory_(std::move(instanceFactory))
     {}
 
     RegistrationModifier(RegistrationModifier&& other)
         : registry_(other.registry_),
-          instanceFactory_(std::move(other.instanceFactory_))
+          instanceFactory_(std::move(other.instanceFactory_)),
+          activators_(std::move(other.activators_))
     {}
 
     ~RegistrationModifier()
     {
+        for (const auto& element : activators_)
+        {
+            registry_.Insert(element.first, element.second);
+        }
     }
 
     template<typename T>
@@ -65,35 +73,31 @@ public:
     template<typename T>
     RegistrationModifier& Named(const std::string& name)
     {
-        assert(activator_ != nullptr);
         static_assert(std::is_base_of<T, RegisterType>::value, "T must be base of RegisterType");
 
-        registry_.Insert(TypeInfo::Id<T>(name), std::make_shared<GenericActivator<T, RegisterType>>(instanceFactory_));
+        activators_[TypeInfo::Id<T>(name)] = std::make_shared<GenericActivator<T, RegisterType>>(instanceFactory_);
 
         return *this;
     }
 
     RegistrationModifier& SingleInstance()
     {
-        assert(activator_ != nullptr);
-
-        //activator_ = std::make_shared<SingleInstanceActivatorFacade>(activator_);
+        instanceFactory_->SetLifeCyclePolicy(LifeCyclePolicy::SingleInstance);
 
         return *this;
     }
 
     RegistrationModifier& WeakSingleInstance()
     {
-        assert(activator_ != nullptr);
-
-        //activator_ = std::make_shared<WeakSingleInstanceActivatorFacade>(activator_);
+        instanceFactory_->SetLifeCyclePolicy(LifeCyclePolicy::WeakSingleInstance);
 
         return *this;
     }
 
 private:
     ActivatorRegistry& registry_;
-    std::shared_ptr<const InstanceFactory<RegisterType>> instanceFactory_;
+    std::shared_ptr<InstanceFactory<RegisterType>> instanceFactory_;
+    Activators activators_;
 };
 
 }

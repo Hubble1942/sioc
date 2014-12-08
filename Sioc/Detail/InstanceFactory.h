@@ -37,21 +37,62 @@ class Container;
 namespace Detail
 {
 
+enum class LifeCyclePolicy
+{
+    Transient,
+    SingleInstance,
+    WeakSingleInstance,
+};
+
 template<typename T>
 class InstanceFactory : private boost::noncopyable
 {
 public:
     explicit InstanceFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
-        : delegate_(delegate)
+        : delegate_(delegate),
+          lifeCyclePolicy_(LifeCyclePolicy::Transient)
     {}
 
-    virtual std::shared_ptr<T> Produce(const Container& container) const
+    std::shared_ptr<T> Produce(const Container& container) const
     {
-        return delegate_(container);
+        std::shared_ptr<T> product;
+
+        switch (lifeCyclePolicy_)
+        {
+        case LifeCyclePolicy::SingleInstance:
+            if (singleProduct_ == nullptr)
+            {
+                singleProduct_ = delegate_(container);
+            }
+            product = singleProduct_;
+            break;
+
+        case LifeCyclePolicy::WeakSingleInstance:
+            product = weakSingleProduct_.lock();
+            if (product == nullptr)
+            {
+                product = delegate_(container);
+                weakSingleProduct_ = product;
+            }
+            break;
+
+        default:
+            product = delegate_(container);
+        }
+
+        return product;
+    }
+
+    void SetLifeCyclePolicy(LifeCyclePolicy lifeCyclePolicy)
+    {
+        lifeCyclePolicy_ = lifeCyclePolicy;
     }
 
 private:
     std::function<std::shared_ptr<T>(const Container&)> delegate_;
+    LifeCyclePolicy lifeCyclePolicy_;
+    mutable std::shared_ptr<T> singleProduct_;
+    mutable std::weak_ptr<T> weakSingleProduct_;
 };
 
 }
