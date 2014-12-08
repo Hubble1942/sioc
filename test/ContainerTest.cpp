@@ -61,7 +61,10 @@ TEST(ContainerTest, InjectSomeArgumentsMacro)
 {
     Container sut;
 
-    sut.RegisterType<NonDefaultCtor>([](const Container&) { return new NonDefaultCtor(42); });
+    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    {
+        return new NonDefaultCtor(42);
+    });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
 
@@ -232,7 +235,7 @@ TEST(ContainerTest, SingleInstanceIsSingle)
         instance1Unsafe = instance1.get();
     }
 
-    
+
     auto instance2 = sut.Resolve<DefaultConstructable>();
     ASSERT_EQ(instance1Unsafe, instance2.get());
 }
@@ -291,7 +294,10 @@ TEST(ContainerTest, CtorInjectRaw)
     Container sut;
 
     sut.RegisterType<Derived>().As<Base>();
-    sut.RegisterType<BaseHolder>([](const Container& c){ return new BaseHolder(c.Resolve<Base>()); });
+    sut.RegisterType<BaseHolder>([](const Container & c)
+    {
+        return new BaseHolder(c.Resolve<Base>());
+    });
 
     auto instance = sut.Resolve<BaseHolder>();
 
@@ -317,7 +323,10 @@ TEST(ContainerTest, CtorInjectWithInjectMacro)
     Container sut;
 
     sut.RegisterType<Derived>().As<Base>();
-    sut.RegisterType<BaseHolder>([](const Container& c){ return new BaseHolder(INJECT(Base)); });
+    sut.RegisterType<BaseHolder>([](const Container & c)
+    {
+        return new BaseHolder(INJECT(Base));
+    });
 
     auto instance = sut.Resolve<BaseHolder>();
 
@@ -337,5 +346,16 @@ TEST(ContainerTest, CtorInjectWithMacro)
     ASSERT_NE(nullptr, instance);
     EXPECT_NE(nullptr, instance->base_);
 }
+
+TEST(ContainerTest, MultipleInheritance)
+{
+    Container sut;
+
+    sut.RegisterType<Multiple>().As<Base1>().As<Base2>();
+
+    EXPECT_EQ(1, sut.Resolve<Base1>()->GetBase1Value());
+    EXPECT_EQ(2, sut.Resolve<Base2>()->GetBase2Value());
+}
+
 
 }

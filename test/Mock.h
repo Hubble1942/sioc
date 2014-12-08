@@ -64,4 +64,29 @@ public:
     std::shared_ptr<Base> base_;
 };
 
+class Base1
+{
+public:
+    virtual ~Base1() {}
+
+    virtual int GetBase1Value()
+    {
+        return 1;
+    }
+};
+
+class Base2
+{
+public:
+    virtual ~Base2() {}
+
+    virtual int GetBase2Value()
+    {
+        return 2;
+    }
+};
+
+class Multiple : public Base1, public Base2
+{};
+
 }
