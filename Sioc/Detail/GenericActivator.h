@@ -22,10 +22,7 @@
 #pragma once
 
 // local
-#include "TypedActivatorBase.h"
-
-// STL
-#include <functional>
+#include "IActivator.h"
 
 // boost
 #include <boost/noncopyable.hpp>
@@ -35,24 +32,23 @@ namespace Sioc
 namespace Detail
 {
 
-/// <summary>
-/// Generic activator implementation holding a delegate activating the requested instance.
-/// </summary>
-template<typename T>
-class GenericActivator : public TypedActivatorBase<T>, private boost::noncopyable
+template<typename TargetType, typename SourceType>
+class GenericActivator : public IActivator, private boost::noncopyable
 {
 public:
-    explicit GenericActivator(std::function<std::shared_ptr<T>(const Container&)> delegate)
-        : delegate_(delegate)
-    {}
-
-    virtual std::shared_ptr<T> ActivateTyped(const Container& container) const
+    explicit GenericActivator(std::shared_ptr<const InstanceFactory<SourceType>> instanceFactory)
+        : instanceFactory_(std::move(instanceFactory))
     {
-        return delegate_(container);
+        static_assert(std::is_base_of<TargetType, SourceType>::value, "TargetType must be base of SourceType");
+    }
+
+    virtual std::shared_ptr<void> Activate(const Container& container) const
+    {
+        return std::static_pointer_cast<TargetType>(instanceFactory_->Produce(container));
     }
 
 private:
-    std::function<std::shared_ptr<T>(const Container&)> delegate_;
+    std::shared_ptr<const InstanceFactory<SourceType>> instanceFactory_;
 };
 
 }

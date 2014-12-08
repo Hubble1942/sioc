@@ -24,7 +24,7 @@
 // local
 #include "ActivatorRegistry.h"
 #include "InstanceFactory.h"
-#include "UpcastingActivator.h"
+#include "GenericActivator.h"
 
 // STL
 #include <type_traits>
@@ -68,7 +68,7 @@ public:
         assert(activator_ != nullptr);
         static_assert(std::is_base_of<T, RegisterType>::value, "T must be base of RegisterType");
 
-        registry_.Insert(TypeInfo::Id<T>(name), std::make_shared<UpcastingActivator<T, RegisterType>>(instanceFactory_));
+        registry_.Insert(TypeInfo::Id<T>(name), std::make_shared<GenericActivator<T, RegisterType>>(instanceFactory_));
 
         return *this;
     }
