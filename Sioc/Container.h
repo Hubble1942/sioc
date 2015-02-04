@@ -85,6 +85,10 @@ public:
         return registrationModifier;
     }
 
+    /// <summary>
+    /// Registers an instance.
+    /// </summary>
+    /// <param name="instance">The instance.</param>
     template<typename T>
     Detail::RegistrationModifier<T> RegisterInstance(const std::shared_ptr<T>& instance)
     {
