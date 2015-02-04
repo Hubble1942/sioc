@@ -133,7 +133,9 @@ private:
     Detail::ActivatorRegistry registry_;
 };
 
+#define CREATE0(statement) [](const Sioc::Container&) -> decltype(statement) { return statement; }
 #define CREATE(statement) [](const Sioc::Container& c) -> decltype(statement) { return statement; }
 #define INJECT(type) c.Resolve<type>()
+#define INJECT_NAMED(type, name) c.ResolveNamed<type>(name)
 
 }
