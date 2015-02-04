@@ -357,5 +357,17 @@ TEST(ContainerTest, MultipleInheritance)
     EXPECT_EQ(2, sut.Resolve<Base2>()->GetBase2Value());
 }
 
+TEST(ContainerTest, RegisterInstance)
+{
+    Container sut;
+    auto instance = std::make_shared<DefaultConstructable>();
+
+    sut.RegisterInstance(instance);
+
+    auto resolved = sut.Resolve<DefaultConstructable>();
+
+    ASSERT_EQ(instance, resolved);
+}
+
 
 }

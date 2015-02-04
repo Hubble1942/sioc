@@ -85,6 +85,15 @@ public:
         return registrationModifier;
     }
 
+    template<typename T>
+    Detail::RegistrationModifier<T> RegisterInstance(const std::shared_ptr<T>& instance)
+    {
+        return RegisterFactory<T>([instance](const Container&)
+        {
+            return instance;
+        });
+    }
+
     /// <summary>
     /// Resolves an instance of a specified type.
     /// </summary>
