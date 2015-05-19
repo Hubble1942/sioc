@@ -39,9 +39,9 @@ And register some types:
 .. code:: cpp
 
     container.RegisterType<DefaultConstructable>();
-    container.RegisterType<NonDefaultCtor>([](const Container&) { return new NonDefaultCtor(42); });
+    container.RegisterType<NonDefaultCtor>([](const Container&) { return std::make_shared<NonDefaultCtor>(42); });
     container.RegisterType<Derived>().Named<Middle>("Foo").As<Base>().SingleInstance();
-    container.RegisterType<BaseHolder>(CREATE(new BaseHolder(INJECT(Base)))).WeakSingleInstance();
+    container.RegisterType<BaseHolder>(CREATE(std::make_shared<BaseHolder>(INJECT(Base)))).WeakSingleInstance();
     
 Now you're ready to resolv'em:
 
