@@ -48,7 +48,7 @@ TEST(ContainerTest, InjectSomeArguments)
 
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return new NonDefaultCtor(42);
+        return std::make_shared<NonDefaultCtor>(42);
     });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
@@ -63,7 +63,7 @@ TEST(ContainerTest, InjectSomeArgumentsMacro)
 
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return new NonDefaultCtor(42);
+        return std::make_shared<NonDefaultCtor>(42);
     });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
@@ -72,36 +72,21 @@ TEST(ContainerTest, InjectSomeArgumentsMacro)
     EXPECT_EQ(42, instance->arg0_);
 }
 
-TEST(ContainerTest, FactoryMethod)
-{
-    Container sut;
-
-    sut.RegisterFactory<NonDefaultCtor>([](const Container&)
-    {
-        return std::make_shared<NonDefaultCtor>(4711);
-    });
-
-    auto instance = sut.Resolve<NonDefaultCtor>();
-
-    ASSERT_NE(nullptr, instance);
-    EXPECT_EQ(4711, instance->arg0_);
-}
-
 TEST(ContainerTest, MultipleRegistrationToSameTypeResolvesToLast)
 {
     Container sut;
 
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return new NonDefaultCtor(42);
+        return std::make_shared<NonDefaultCtor>(42);
     });
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return new NonDefaultCtor(4711);
+        return std::make_shared<NonDefaultCtor>(4711);
     });
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return new NonDefaultCtor(31415);
+        return std::make_shared<NonDefaultCtor>(31415);
     });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
@@ -116,15 +101,15 @@ TEST(ContainerTest, ResolveAllGetsAll)
 
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return new NonDefaultCtor(42);
+        return std::make_shared<NonDefaultCtor>(42);
     });
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return new NonDefaultCtor(4711);
+        return std::make_shared<NonDefaultCtor>(4711);
     });
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return new NonDefaultCtor(31415);
+        return std::make_shared<NonDefaultCtor>(31415);
     });
 
     auto instances = sut.ResolveAll<NonDefaultCtor>();
@@ -296,7 +281,7 @@ TEST(ContainerTest, CtorInjectRaw)
     sut.RegisterType<Derived>().As<Base>();
     sut.RegisterType<BaseHolder>([](const Container & c)
     {
-        return new BaseHolder(c.Resolve<Base>());
+        return std::make_shared<BaseHolder>(c.Resolve<Base>());
     });
 
     auto instance = sut.Resolve<BaseHolder>();
@@ -310,7 +295,7 @@ TEST(ContainerTest, CtorInjectWithCreateMacro)
     Container sut;
 
     sut.RegisterType<Derived>().As<Base>();
-    sut.RegisterType<BaseHolder>(CREATE(new BaseHolder(c.Resolve<Base>())));
+    sut.RegisterType<BaseHolder>(CREATE(std::make_shared<BaseHolder>(c.Resolve<Base>())));
 
     auto instance = sut.Resolve<BaseHolder>();
 
@@ -325,7 +310,7 @@ TEST(ContainerTest, CtorInjectWithInjectMacro)
     sut.RegisterType<Derived>().As<Base>();
     sut.RegisterType<BaseHolder>([](const Container & c)
     {
-        return new BaseHolder(INJECT(Base));
+        return std::make_shared<BaseHolder>(INJECT(Base));
     });
 
     auto instance = sut.Resolve<BaseHolder>();
@@ -339,7 +324,7 @@ TEST(ContainerTest, CtorInjectWithMacro)
     Container sut;
 
     sut.RegisterType<Derived>().As<Base>();
-    sut.RegisterType<BaseHolder>(CREATE(new BaseHolder(INJECT(Base))));
+    sut.RegisterType<BaseHolder>(CREATE(std::make_shared<BaseHolder>(INJECT(Base))));
 
     auto instance = sut.Resolve<BaseHolder>();
 

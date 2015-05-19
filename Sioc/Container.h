@@ -50,7 +50,7 @@ public:
     template<typename T>
     Detail::RegistrationModifier<T> RegisterType()
     {
-        return RegisterFactory<T>([](const Container&)
+        return RegisterType<T>([](const Container&)
         {
             return std::make_shared<T>();
         });
@@ -61,20 +61,7 @@ public:
     /// </summary>
     /// <param name="delegate">The delegate constructing the instance.</param>
     template<typename T>
-    Detail::RegistrationModifier<T> RegisterType(std::function<T*(const Container&)> delegate)
-    {
-        return RegisterFactory<T>([delegate](const Container & c)
-        {
-            return std::shared_ptr<T>(delegate(c));
-        });
-    }
-
-    /// <summary>
-    /// Registers the factory.
-    /// </summary>
-    /// <param name="delegate">The delegate constructing the instance.</param>
-    template<typename T>
-    Detail::RegistrationModifier<T> RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
+    Detail::RegistrationModifier<T> RegisterType(std::function<std::shared_ptr<T>(const Container&)> delegate)
     {
         auto instanceFactory = std::make_shared<Detail::InstanceFactory<T>>(delegate);
 
@@ -92,7 +79,7 @@ public:
     template<typename T>
     Detail::RegistrationModifier<T> RegisterInstance(const std::shared_ptr<T>& instance)
     {
-        return RegisterFactory<T>([instance](const Container&)
+        return RegisterType<T>([instance](const Container&)
         {
             return instance;
         });
