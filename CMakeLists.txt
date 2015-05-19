@@ -12,7 +12,7 @@ project (Sioc)
 ###############################################################################
 
 set(Boost_NO_BOOST_CMAKE ON)
-find_package(Boost 1.57.0 EXACT REQUIRED)
+find_package(Boost 1.57.0 REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
