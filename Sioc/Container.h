@@ -23,6 +23,7 @@
 
 // local
 #include "Detail/InstanceFactory.h"
+#include "Detail/DeduceReturnType.h"
 #include "Detail/RegistrationModifier.h"
 #include "Detail/ActivatorRegistry.h"
 #include "Detail/TypeInfo.h"
@@ -73,13 +74,29 @@ public:
     }
 
     /// <summary>
+    /// Registers the type.
+    /// </summary>
+    /// <param name="delegate">The delegate constructing the instance.</param>
+    template<typename D, typename T = typename Detail::DeduceReturnType<D>::Type>
+    Detail::RegistrationModifier<T> Register(D delegate)
+    {
+        auto instanceFactory = std::make_shared<Detail::InstanceFactory<T>>(delegate);
+
+        Detail::RegistrationModifier<T> registrationModifier(registry_, instanceFactory);
+
+        registrationModifier.template As<T>();
+
+        return registrationModifier;
+    }
+
+    /// <summary>
     /// Registers an instance.
     /// </summary>
     /// <param name="instance">The instance.</param>
     template<typename T>
     Detail::RegistrationModifier<T> RegisterInstance(const std::shared_ptr<T>& instance)
     {
-        return RegisterType<T>([instance](const Container&)
+        return Register([instance](const Container&)
         {
             return instance;
         });

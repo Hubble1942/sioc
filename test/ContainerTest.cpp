@@ -382,5 +382,18 @@ TEST(ContainerTest, MakeMakroDoubleInject)
     EXPECT_NE(nullptr, instance->base2_);
 }
 
+TEST(ContainerTest, JustRegister)
+{
+    Container sut;
+
+    sut.RegisterType<Base>();
+    sut.Register(MAKE(BaseHolder, INJECT(Base)));
+
+    auto instance = sut.Resolve<BaseHolder>();
+
+    ASSERT_NE(nullptr, instance);
+    EXPECT_NE(nullptr, instance->base_);
+}
+
 
 }
