@@ -354,5 +354,33 @@ TEST(ContainerTest, RegisterInstance)
     ASSERT_EQ(instance, resolved);
 }
 
+TEST(ContainerTest, MakeMakroSingleInject)
+{
+    Container sut;
+
+    sut.RegisterType<Base>();
+    sut.RegisterType<BaseHolder>(MAKE(BaseHolder, INJECT(Base)));
+
+    auto instance = sut.Resolve<BaseHolder>();
+
+    ASSERT_NE(nullptr, instance);
+    EXPECT_NE(nullptr, instance->base_);
+}
+
+TEST(ContainerTest, MakeMakroDoubleInject)
+{
+    Container sut;
+
+    sut.RegisterType<Base>();
+    sut.RegisterType<Derived>();
+    sut.RegisterType<DoubleBaseHolder>(MAKE(DoubleBaseHolder, INJECT(Base), INJECT(Derived)));
+
+    auto instance = sut.Resolve<DoubleBaseHolder>();
+
+    ASSERT_NE(nullptr, instance);
+    EXPECT_NE(nullptr, instance->base1_);
+    EXPECT_NE(nullptr, instance->base2_);
+}
+
 
 }

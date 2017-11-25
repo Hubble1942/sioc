@@ -64,6 +64,18 @@ public:
     std::shared_ptr<Base> base_;
 };
 
+class DoubleBaseHolder
+{
+public:
+    explicit DoubleBaseHolder(std::shared_ptr<Base> base1, std::shared_ptr<Base> base2)
+        : base1_(base1),
+          base2_(base2)
+    {}
+
+    std::shared_ptr<Base> base1_;
+    std::shared_ptr<Base> base2_;
+};
+
 class Base1
 {
 public:
