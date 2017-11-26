@@ -19,86 +19,47 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#pragma once
 
-#include <memory>
+#include "TestHelpers/SomeClasses.h"
+#include <gtest/gtest.h>
+#include <Sioc/Container.h>
 
 namespace Sioc
 {
 
-class DefaultConstructable
+using namespace TestHelpers;
+
+TEST(NamedTest, RightNameGivesInstance)
 {
-};
+    Container sut;
 
-class NonDefaultCtor
+    sut.RegisterType<A>().Named<A>("Foo");
+
+    auto resolved = sut.ResolveNamed<A>("Foo");
+
+    ASSERT_NE(nullptr, resolved);
+}
+
+TEST(NamedTest, WrongNameGivesNoInstance)
 {
-public:
-    explicit NonDefaultCtor(int arg0)
-        : arg0_(arg0)
-    {}
+    Container sut;
 
-    int arg0_;
-};
+    sut.RegisterType<A>().Named<A>("Foo");
 
-class Base
+    auto resolved = sut.ResolveNamed<A>("Bar");
+
+    ASSERT_EQ(nullptr, resolved);
+}
+
+TEST(NamedTest, StillAccessibleWithoutName)
 {
-public:
-    virtual ~Base() {}
-};
+    Container sut;
 
-class Middle : public Base
-{
-};
+    sut.RegisterType<A>().Named<A>("Foo");
 
-class Derived : public Middle
-{
-};
+    auto resolved = sut.Resolve<A>();
 
-class BaseHolder
-{
-public:
-    explicit BaseHolder(std::shared_ptr<Base> base)
-        : base_(base)
-    {}
-
-    std::shared_ptr<Base> base_;
-};
-
-class DoubleBaseHolder
-{
-public:
-    explicit DoubleBaseHolder(std::shared_ptr<Base> base1, std::shared_ptr<Base> base2)
-        : base1_(base1),
-          base2_(base2)
-    {}
-
-    std::shared_ptr<Base> base1_;
-    std::shared_ptr<Base> base2_;
-};
-
-class Base1
-{
-public:
-    virtual ~Base1() {}
-
-    virtual int GetBase1Value()
-    {
-        return 1;
-    }
-};
-
-class Base2
-{
-public:
-    virtual ~Base2() {}
-
-    virtual int GetBase2Value()
-    {
-        return 2;
-    }
-};
-
-class Multiple : public Base1, public Base2
-{};
+    ASSERT_NE(nullptr, resolved);
+}
 
 }
