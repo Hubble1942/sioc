@@ -8,8 +8,8 @@ set(SiocTest_C
 )
 
 set(SiocTest_CPP
-    ContainerTest.cpp
     Detail/TypeInfoTest.cpp
+    LegacyTest.cpp
 )
 
 set(SiocTest_H

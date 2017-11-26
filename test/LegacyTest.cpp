@@ -20,18 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// framework
-#include <gtest/gtest.h>
-
-// sut
-#include <Sioc/Container.h>
-
 #include "Mock.h"
+#include <gtest/gtest.h>
+#include <Sioc/Container.h>
 
 namespace Sioc
 {
 
-TEST(ContainerTest, SimpleRegisterResolve)
+TEST(LegacyTest, SimpleRegisterResolve)
 {
     Container sut;
 
@@ -42,13 +38,13 @@ TEST(ContainerTest, SimpleRegisterResolve)
     ASSERT_NE(nullptr, instance);
 }
 
-TEST(ContainerTest, InjectSomeArguments)
+TEST(LegacyTest, InjectSomeArguments)
 {
     Container sut;
 
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return std::make_shared<NonDefaultCtor>(42);
+        return new NonDefaultCtor(42);
     });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
@@ -57,13 +53,13 @@ TEST(ContainerTest, InjectSomeArguments)
     EXPECT_EQ(42, instance->arg0_);
 }
 
-TEST(ContainerTest, InjectSomeArgumentsMacro)
+TEST(LegacyTest, InjectSomeArgumentsMacro)
 {
     Container sut;
 
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return std::make_shared<NonDefaultCtor>(42);
+        return new NonDefaultCtor(42);
     });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
@@ -72,21 +68,21 @@ TEST(ContainerTest, InjectSomeArgumentsMacro)
     EXPECT_EQ(42, instance->arg0_);
 }
 
-TEST(ContainerTest, MultipleRegistrationToSameTypeResolvesToLast)
+TEST(LegacyTest, MultipleRegistrationToSameTypeResolvesToLast)
 {
     Container sut;
 
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return std::make_shared<NonDefaultCtor>(42);
+        return new NonDefaultCtor(42);
     });
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return std::make_shared<NonDefaultCtor>(4711);
+        return new NonDefaultCtor(4711);
     });
     sut.RegisterType<NonDefaultCtor>([](const Container&)
     {
-        return std::make_shared<NonDefaultCtor>(31415);
+        return new NonDefaultCtor(31415);
     });
 
     auto instance = sut.Resolve<NonDefaultCtor>();
@@ -95,19 +91,19 @@ TEST(ContainerTest, MultipleRegistrationToSameTypeResolvesToLast)
     EXPECT_EQ(31415, instance->arg0_);
 }
 
-TEST(ContainerTest, ResolveAllGetsAll)
+TEST(LegacyTest, ResolveAllGetsAll)
 {
     Container sut;
 
-    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    sut.RegisterFactory<NonDefaultCtor>([](const Container&)
     {
         return std::make_shared<NonDefaultCtor>(42);
     });
-    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    sut.RegisterFactory<NonDefaultCtor>([](const Container&)
     {
         return std::make_shared<NonDefaultCtor>(4711);
     });
-    sut.RegisterType<NonDefaultCtor>([](const Container&)
+    sut.RegisterFactory<NonDefaultCtor>([](const Container&)
     {
         return std::make_shared<NonDefaultCtor>(31415);
     });
@@ -123,7 +119,7 @@ TEST(ContainerTest, ResolveAllGetsAll)
     EXPECT_EQ(31415, instances[2]->arg0_);
 }
 
-TEST(ContainerTest, MultipleRegistrationsInOneAreIgnored)
+TEST(LegacyTest, MultipleRegistrationsInOneAreIgnored)
 {
     Container sut;
 
@@ -133,7 +129,7 @@ TEST(ContainerTest, MultipleRegistrationsInOneAreIgnored)
     ASSERT_EQ(1, bases.size());
 }
 
-TEST(ContainerTest, DerivedAsBase)
+TEST(LegacyTest, DerivedAsBase)
 {
     Container sut;
 
@@ -146,7 +142,7 @@ TEST(ContainerTest, DerivedAsBase)
     ASSERT_NE(nullptr, derived);
 }
 
-TEST(ContainerTest, DerivedAsMiddleAndBase)
+TEST(LegacyTest, DerivedAsMiddleAndBase)
 {
     Container sut;
 
@@ -162,7 +158,7 @@ TEST(ContainerTest, DerivedAsMiddleAndBase)
     ASSERT_NE(nullptr, derived);
 }
 
-TEST(ContainerTest, AsKeepsOriginalRegistration)
+TEST(LegacyTest, AsKeepsOriginalRegistration)
 {
     Container sut;
 
@@ -172,7 +168,7 @@ TEST(ContainerTest, AsKeepsOriginalRegistration)
     ASSERT_NE(nullptr, derived);
 }
 
-TEST(ContainerTest, DefaultTransientInstance)
+TEST(LegacyTest, DefaultTransientInstance)
 {
     Container sut;
 
@@ -184,7 +180,7 @@ TEST(ContainerTest, DefaultTransientInstance)
     ASSERT_NE(instance1, instance2);
 }
 
-TEST(ContainerTest, SingleInstance)
+TEST(LegacyTest, SingleInstance)
 {
     Container sut;
 
@@ -196,7 +192,7 @@ TEST(ContainerTest, SingleInstance)
     ASSERT_EQ(instance1, instance2);
 }
 
-TEST(ContainerTest, WeakSingleInstance)
+TEST(LegacyTest, WeakSingleInstance)
 {
     Container sut;
 
@@ -208,7 +204,7 @@ TEST(ContainerTest, WeakSingleInstance)
     ASSERT_EQ(instance1, instance2);
 }
 
-TEST(ContainerTest, SingleInstanceIsSingle)
+TEST(LegacyTest, SingleInstanceIsSingle)
 {
     Container sut;
 
@@ -225,7 +221,7 @@ TEST(ContainerTest, SingleInstanceIsSingle)
     ASSERT_EQ(instance1Unsafe, instance2.get());
 }
 
-TEST(ContainerTest, WeakSingleInstanceIsWeak)
+TEST(LegacyTest, WeakSingleInstanceIsWeak)
 {
     Container sut;
 
@@ -241,7 +237,7 @@ TEST(ContainerTest, WeakSingleInstanceIsWeak)
     ASSERT_NE(instance1Unsafe, instance2.get());
 }
 
-TEST(ContainerTest, NamedRightNameGivesInstance)
+TEST(LegacyTest, NamedRightNameGivesInstance)
 {
     Container sut;
 
@@ -252,7 +248,7 @@ TEST(ContainerTest, NamedRightNameGivesInstance)
     ASSERT_NE(nullptr, instance);
 }
 
-TEST(ContainerTest, NamedWrongNameNoInstance)
+TEST(LegacyTest, NamedWrongNameNoInstance)
 {
     Container sut;
 
@@ -263,7 +259,7 @@ TEST(ContainerTest, NamedWrongNameNoInstance)
     ASSERT_EQ(nullptr, instance);
 }
 
-TEST(ContainerTest, NamedIsStillAccessibleWithoutName)
+TEST(LegacyTest, NamedIsStillAccessibleWithoutName)
 {
     Container sut;
 
@@ -274,12 +270,12 @@ TEST(ContainerTest, NamedIsStillAccessibleWithoutName)
     ASSERT_NE(nullptr, instance);
 }
 
-TEST(ContainerTest, CtorInjectRaw)
+TEST(LegacyTest, CtorInjectRaw)
 {
     Container sut;
 
     sut.RegisterType<Derived>().As<Base>();
-    sut.RegisterType<BaseHolder>([](const Container & c)
+    sut.RegisterFactory<BaseHolder>([](const Container & c)
     {
         return std::make_shared<BaseHolder>(c.Resolve<Base>());
     });
@@ -290,12 +286,12 @@ TEST(ContainerTest, CtorInjectRaw)
     EXPECT_NE(nullptr, instance->base_);
 }
 
-TEST(ContainerTest, CtorInjectWithCreateMacro)
+TEST(LegacyTest, CtorInjectWithCreateMacro)
 {
     Container sut;
 
     sut.RegisterType<Derived>().As<Base>();
-    sut.RegisterType<BaseHolder>(CREATE(std::make_shared<BaseHolder>(c.Resolve<Base>())));
+    sut.RegisterFactory<BaseHolder>(CREATE(std::make_shared<BaseHolder>(c.Resolve<Base>())));
 
     auto instance = sut.Resolve<BaseHolder>();
 
@@ -303,12 +299,12 @@ TEST(ContainerTest, CtorInjectWithCreateMacro)
     EXPECT_NE(nullptr, instance->base_);
 }
 
-TEST(ContainerTest, CtorInjectWithInjectMacro)
+TEST(LegacyTest, CtorInjectWithInjectMacro)
 {
     Container sut;
 
     sut.RegisterType<Derived>().As<Base>();
-    sut.RegisterType<BaseHolder>([](const Container & c)
+    sut.RegisterFactory<BaseHolder>([](const Container & c)
     {
         return std::make_shared<BaseHolder>(INJECT(Base));
     });
@@ -319,12 +315,12 @@ TEST(ContainerTest, CtorInjectWithInjectMacro)
     EXPECT_NE(nullptr, instance->base_);
 }
 
-TEST(ContainerTest, CtorInjectWithMacro)
+TEST(LegacyTest, CtorInjectWithMacro)
 {
     Container sut;
 
     sut.RegisterType<Derived>().As<Base>();
-    sut.RegisterType<BaseHolder>(CREATE(std::make_shared<BaseHolder>(INJECT(Base))));
+    sut.RegisterFactory<BaseHolder>(CREATE(std::make_shared<BaseHolder>(INJECT(Base))));
 
     auto instance = sut.Resolve<BaseHolder>();
 
@@ -332,7 +328,7 @@ TEST(ContainerTest, CtorInjectWithMacro)
     EXPECT_NE(nullptr, instance->base_);
 }
 
-TEST(ContainerTest, MultipleInheritance)
+TEST(LegacyTest, MultipleInheritance)
 {
     Container sut;
 
@@ -342,7 +338,7 @@ TEST(ContainerTest, MultipleInheritance)
     EXPECT_EQ(2, sut.Resolve<Base2>()->GetBase2Value());
 }
 
-TEST(ContainerTest, RegisterInstance)
+TEST(LegacyTest, RegisterInstance)
 {
     Container sut;
     auto instance = std::make_shared<DefaultConstructable>();
@@ -354,12 +350,12 @@ TEST(ContainerTest, RegisterInstance)
     ASSERT_EQ(instance, resolved);
 }
 
-TEST(ContainerTest, MakeMakroSingleInject)
+TEST(LegacyTest, MakeMakroSingleInject)
 {
     Container sut;
 
     sut.RegisterType<Base>();
-    sut.RegisterType<BaseHolder>(MAKE(BaseHolder, INJECT(Base)));
+    sut.RegisterFactory<BaseHolder>(MAKE(BaseHolder, INJECT(Base)));
 
     auto instance = sut.Resolve<BaseHolder>();
 
@@ -367,13 +363,13 @@ TEST(ContainerTest, MakeMakroSingleInject)
     EXPECT_NE(nullptr, instance->base_);
 }
 
-TEST(ContainerTest, MakeMakroDoubleInject)
+TEST(LegacyTest, MakeMakroDoubleInject)
 {
     Container sut;
 
     sut.RegisterType<Base>();
     sut.RegisterType<Derived>();
-    sut.RegisterType<DoubleBaseHolder>(MAKE(DoubleBaseHolder, INJECT(Base), INJECT(Derived)));
+    sut.RegisterFactory<DoubleBaseHolder>(MAKE(DoubleBaseHolder, INJECT(Base), INJECT(Derived)));
 
     auto instance = sut.Resolve<DoubleBaseHolder>();
 
@@ -382,7 +378,7 @@ TEST(ContainerTest, MakeMakroDoubleInject)
     EXPECT_NE(nullptr, instance->base2_);
 }
 
-TEST(ContainerTest, JustRegister)
+TEST(LegacyTest, JustRegister)
 {
     Container sut;
 

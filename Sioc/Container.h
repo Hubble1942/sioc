@@ -80,7 +80,21 @@ public:
     /// <param name="delegate">The delegate constructing the instance.</param>
     // TODO: Get rid if this one
     template<typename T>
-    Detail::RegistrationModifier<T> RegisterType(std::function<std::shared_ptr<T>(const Container&)> delegate)
+    Detail::RegistrationModifier<T> RegisterType(std::function<T* (const Container&)> delegate)
+    {
+        return Register([delegate](const Container & c)
+        {
+            return std::shared_ptr<T>(delegate(c));
+        });
+    }
+
+    /// <summary>
+    /// Registers the factory.
+    /// </summary>
+    /// <param name="delegate">The delegate constructing the instance.</param>
+    // TODO: Get rid if this one
+    template<typename T>
+    Detail::RegistrationModifier<T> RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
     {
         return Register(delegate);
     }
