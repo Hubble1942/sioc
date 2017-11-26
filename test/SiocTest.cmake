@@ -8,12 +8,15 @@ set(SiocTest_C
 )
 
 set(SiocTest_CPP
+    AsTypeTest.cpp
     Detail/TypeInfoTest.cpp
-    LegacyTest.cpp
+    LifetimeTest.cpp
+    NamedTest.cpp
+    RegisterResolveTest.cpp
 )
 
 set(SiocTest_H
-    Mock.h
+    TestHelpers/SomeClasses.h
 )
 
 

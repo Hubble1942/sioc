@@ -23,6 +23,9 @@
 
 namespace Sioc
 {
+
+class Container;
+
 namespace Detail
 {
 
@@ -34,7 +37,7 @@ struct DeduceReturnType
 {
 private:
     static D GetDelegate();
-    static Container GetContainer();
+    static const Container& GetContainer();
 
     using PtrType = decltype(GetDelegate()(GetContainer()));
 

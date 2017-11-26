@@ -21,20 +21,17 @@
 // THE SOFTWARE.
 #pragma once
 
-// local
-#include "Detail/InstanceFactory.h"
-#include "Detail/DeduceReturnType.h"
-#include "Detail/RegistrationModifier.h"
 #include "Detail/ActivatorRegistry.h"
+#include "Detail/DeduceReturnType.h"
+#include "Detail/InstanceFactory.h"
+#include "Detail/IsCompleteType.h"
+#include "Detail/RegistrationModifier.h"
 #include "Detail/TypeInfo.h"
-
-// STL
-#include <memory>
-#include <functional>
-#include <vector>
-
-// boost
 #include <boost/noncopyable.hpp>
+#include <functional>
+#include <memory>
+#include <type_traits>
+#include <vector>
 
 namespace Sioc
 {
@@ -68,35 +65,12 @@ public:
     template<typename T>
     Detail::RegistrationModifier<T> RegisterType()
     {
+        static_assert(std::is_default_constructible<T>(), "T must be default constructible");
+
         return Register([](const Container&)
         {
             return std::make_shared<T>();
         });
-    }
-
-    /// <summary>
-    /// Registers the type.
-    /// </summary>
-    /// <param name="delegate">The delegate constructing the instance.</param>
-    // TODO: Get rid if this one
-    template<typename T>
-    Detail::RegistrationModifier<T> RegisterType(std::function<T* (const Container&)> delegate)
-    {
-        return Register([delegate](const Container & c)
-        {
-            return std::shared_ptr<T>(delegate(c));
-        });
-    }
-
-    /// <summary>
-    /// Registers the factory.
-    /// </summary>
-    /// <param name="delegate">The delegate constructing the instance.</param>
-    // TODO: Get rid if this one
-    template<typename T>
-    Detail::RegistrationModifier<T> RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
-    {
-        return Register(delegate);
     }
 
     /// <summary>
@@ -118,6 +92,8 @@ public:
     template<typename T>
     std::shared_ptr<T> Resolve() const
     {
+        static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
+
         return ResolveNamed<T>("");
     }
 
@@ -127,6 +103,8 @@ public:
     template<typename T>
     std::shared_ptr<T> ResolveNamed(const std::string& name) const
     {
+        static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
+
         auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(name));
 
         if (!activators.empty())
@@ -143,6 +121,8 @@ public:
     template<typename T>
     std::vector<std::shared_ptr<T>> ResolveAll() const
     {
+        static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
+
         auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(""));
 
         std::vector<std::shared_ptr<T>> instances;
@@ -160,12 +140,9 @@ private:
     Detail::ActivatorRegistry registry_;
 };
 
-#define CREATE0(statement) [](const Sioc::Container&) -> decltype(statement) { return statement; }
-#define CREATE(statement) [](const Sioc::Container& c) -> decltype(statement) { return statement; }
+#define FACTORY(type, ...) [](const Sioc::Container& c) -> std::shared_ptr<type> { (void)c; return std::make_shared<type>(__VA_ARGS__); }
 #define INJECT(type) c.Resolve<type>()
 #define INJECT_NAMED(type, name) c.ResolveNamed<type>(name)
 #define INJECT_ALL(type) c.ResolveAll<type>()
-
-#define MAKE(type, ...) [](const Sioc::Container& c) -> std::shared_ptr<type> { return std::make_shared<type>(__VA_ARGS__); }
 
 }
