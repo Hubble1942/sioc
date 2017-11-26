@@ -47,7 +47,7 @@ TEST(RegisterResolveTest, AggregateType)
     sut.RegisterType<A>();
     sut.RegisterType<B>();
     sut.RegisterType<C>();
-    sut.Register(FACTORY(Aggregate, INJECT(A), INJECT(B), INJECT(C)));
+    sut.Register(TYPE(Aggregate, INJECT(A), INJECT(B), INJECT(C)));
 
     auto resolved = sut.Resolve<Aggregate>();
 
@@ -61,7 +61,7 @@ TEST(RegisterResolveTest, InjectIndependentOfTheContainer)
 {
     Container sut;
 
-    sut.Register(FACTORY(Aggregate, std::make_shared<A>(), std::make_shared<B>(), std::make_shared<C>()));
+    sut.Register(TYPE(Aggregate, std::make_shared<A>(), std::make_shared<B>(), std::make_shared<C>()));
 
     auto resolved = sut.Resolve<Aggregate>();
 
@@ -72,9 +72,9 @@ TEST(RegisterResolveTest, MultipleRegistrationToSameTypeResolvesToLast)
 {
     Container sut;
 
-    sut.Register(FACTORY(IntHolder, 42));
-    sut.Register(FACTORY(IntHolder, 4711));
-    sut.Register(FACTORY(IntHolder, 31415));
+    sut.Register(TYPE(IntHolder, 42));
+    sut.Register(TYPE(IntHolder, 4711));
+    sut.Register(TYPE(IntHolder, 31415));
 
     auto resolved = sut.Resolve<IntHolder>();
 
@@ -86,9 +86,9 @@ TEST(RegisterResolveTest, ResolveAllGetsAll)
 {
     Container sut;
 
-    sut.Register(FACTORY(IntHolder, 42));
-    sut.Register(FACTORY(IntHolder, 4711));
-    sut.Register(FACTORY(IntHolder, 31415));
+    sut.Register(TYPE(IntHolder, 42));
+    sut.Register(TYPE(IntHolder, 4711));
+    sut.Register(TYPE(IntHolder, 31415));
 
     auto all = sut.ResolveAll<IntHolder>();
 
