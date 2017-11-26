@@ -5,6 +5,7 @@
 ### General cmake settings
 ###############################################################################
 cmake_minimum_required (VERSION 3.0 FATAL_ERROR)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 project (Sioc)
 
 ###############################################################################
@@ -36,21 +37,6 @@ if(CMAKE_COMPILER_IS_GNUCC)
 endif(CMAKE_COMPILER_IS_GNUCC)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
-
-###############################################################################
-### Custom macros
-###############################################################################
-
-# define macro to group source files by their folder structure
-macro(group_by_folder_structure FILE_LIST)
-    
-    foreach(FILE ${${FILE_LIST}})
-        get_filename_component(PARENT_DIR "${FILE}" PATH)
-        string(REPLACE "/" "\\" GROUP "${PARENT_DIR}")
-        source_group("${GROUP}" FILES "${FILE}")
-    endforeach()
-    
-endmacro()
 
 ###############################################################################
 ### What is to build
