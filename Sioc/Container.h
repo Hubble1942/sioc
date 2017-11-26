@@ -173,7 +173,7 @@ private:
 #define INJECT_ALL(type) c.ResolveAll<type>()
 
 // Sioc 2.0 Macros
-#define SIOC_CREATE(type, ...) [](const Sioc::Container& c) -> std::shared_ptr<type> { return std::make_shared<type>(__VA_ARGS__); }
+#define SIOC_CREATE(type, ...) [](const Sioc::Container& c) -> std::shared_ptr<type> { (void)c; return std::make_shared<type>(__VA_ARGS__); }
 #define SIOC_INJECT(type) c.Resolve<type>()
 #define SIOC_INJECT_NAMED(type, name) c.ResolveNamed<type>(name)
 #define SIOC_INJECT_ALL(type) c.ResolveAll<type>()

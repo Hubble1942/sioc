@@ -46,4 +46,18 @@ TEST(RegisterResolveTest, SimpleRegisterResolve)
     EXPECT_NE(nullptr, aggregate->c_);
 }
 
+TEST(RegisterResolveTest, InjectIndependentOfTheContainer)
+{
+    Container sut;
+
+    sut.Register(SIOC_CREATE(Aggregate, std::make_shared<A>(), std::make_shared<B>(), std::make_shared<C>()));
+
+    auto aggregate = sut.Resolve<Aggregate>();
+
+    ASSERT_NE(nullptr, aggregate);
+    EXPECT_NE(nullptr, aggregate->a_);
+    EXPECT_NE(nullptr, aggregate->b_);
+    EXPECT_NE(nullptr, aggregate->c_);
+}
+
 }
