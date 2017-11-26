@@ -350,46 +350,4 @@ TEST(LegacyTest, RegisterInstance)
     ASSERT_EQ(instance, resolved);
 }
 
-TEST(LegacyTest, MakeMakroSingleInject)
-{
-    Container sut;
-
-    sut.RegisterType<Base>();
-    sut.RegisterFactory<BaseHolder>(MAKE(BaseHolder, INJECT(Base)));
-
-    auto instance = sut.Resolve<BaseHolder>();
-
-    ASSERT_NE(nullptr, instance);
-    EXPECT_NE(nullptr, instance->base_);
-}
-
-TEST(LegacyTest, MakeMakroDoubleInject)
-{
-    Container sut;
-
-    sut.RegisterType<Base>();
-    sut.RegisterType<Derived>();
-    sut.RegisterFactory<DoubleBaseHolder>(MAKE(DoubleBaseHolder, INJECT(Base), INJECT(Derived)));
-
-    auto instance = sut.Resolve<DoubleBaseHolder>();
-
-    ASSERT_NE(nullptr, instance);
-    EXPECT_NE(nullptr, instance->base1_);
-    EXPECT_NE(nullptr, instance->base2_);
-}
-
-TEST(LegacyTest, JustRegister)
-{
-    Container sut;
-
-    sut.RegisterType<Base>();
-    sut.Register(MAKE(BaseHolder, INJECT(Base)));
-
-    auto instance = sut.Resolve<BaseHolder>();
-
-    ASSERT_NE(nullptr, instance);
-    EXPECT_NE(nullptr, instance->base_);
-}
-
-
 }

@@ -18,6 +18,7 @@ set(Sioc_H
     Detail/GenericActivator.h
     Detail/IActivator.h
     Detail/InstanceFactory.h
+    Detail/IsCompleteType.h
     Detail/RegistrationModifier.h
     Detail/TypeInfo.h
 )

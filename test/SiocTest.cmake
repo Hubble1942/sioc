@@ -10,10 +10,12 @@ set(SiocTest_C
 set(SiocTest_CPP
     Detail/TypeInfoTest.cpp
     LegacyTest.cpp
+    RegisterResolveTest.cpp
 )
 
 set(SiocTest_H
     Mock.h
+    TestHelpers/SomeClasses.h
 )
 
 
