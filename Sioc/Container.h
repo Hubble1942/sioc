@@ -164,6 +164,7 @@ private:
 #define CREATE(statement) [](const Sioc::Container& c) -> decltype(statement) { return statement; }
 #define INJECT(type) c.Resolve<type>()
 #define INJECT_NAMED(type, name) c.ResolveNamed<type>(name)
+#define INJECT_ALL(type) c.ResolveAll<type>()
 
 #define MAKE(type, ...) [](const Sioc::Container& c) -> std::shared_ptr<type> { return std::make_shared<type>(__VA_ARGS__); }
 
