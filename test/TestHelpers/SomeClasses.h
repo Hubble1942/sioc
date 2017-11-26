@@ -43,9 +43,19 @@ public:
           c_(c)
     {}
 
-    const std::shared_ptr<A> a_;
-    const std::shared_ptr<B> b_;
-    const std::shared_ptr<C> c_;
+    std::shared_ptr<A> a_;
+    std::shared_ptr<B> b_;
+    std::shared_ptr<C> c_;
+};
+
+class IntHolder
+{
+public:
+    explicit IntHolder(int value)
+        : value_(value)
+    {}
+
+    int value_;
 };
 
 }
