@@ -76,75 +76,6 @@ TEST(LegacyTest, AsKeepsOriginalRegistration)
     ASSERT_NE(nullptr, derived);
 }
 
-TEST(LegacyTest, DefaultTransientInstance)
-{
-    Container sut;
-
-    sut.RegisterType<DefaultConstructable>();
-
-    auto instance1 = sut.Resolve<DefaultConstructable>();
-
-    auto instance2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_NE(instance1, instance2);
-}
-
-TEST(LegacyTest, SingleInstance)
-{
-    Container sut;
-
-    sut.RegisterType<DefaultConstructable>().SingleInstance();
-
-    auto instance1 = sut.Resolve<DefaultConstructable>();
-
-    auto instance2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_EQ(instance1, instance2);
-}
-
-TEST(LegacyTest, WeakSingleInstance)
-{
-    Container sut;
-
-    sut.RegisterType<DefaultConstructable>().WeakSingleInstance();
-
-    auto instance1 = sut.Resolve<DefaultConstructable>();
-
-    auto instance2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_EQ(instance1, instance2);
-}
-
-TEST(LegacyTest, SingleInstanceIsSingle)
-{
-    Container sut;
-
-    sut.RegisterType<DefaultConstructable>().SingleInstance();
-
-    DefaultConstructable* instance1Unsafe = 0;
-    {
-        auto instance1 = sut.Resolve<DefaultConstructable>();
-        instance1Unsafe = instance1.get();
-    }
-
-
-    auto instance2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_EQ(instance1Unsafe, instance2.get());
-}
-
-TEST(LegacyTest, WeakSingleInstanceIsWeak)
-{
-    Container sut;
-
-    sut.RegisterType<DefaultConstructable>().WeakSingleInstance();
-
-    DefaultConstructable* instance1Unsafe = 0;
-    {
-        auto instance1 = sut.Resolve<DefaultConstructable>();
-        instance1Unsafe = instance1.get();
-    }
-
-    auto instance2 = sut.Resolve<DefaultConstructable>();
-    ASSERT_NE(instance1Unsafe, instance2.get());
-}
-
 TEST(LegacyTest, NamedRightNameGivesInstance)
 {
     Container sut;
@@ -202,18 +133,6 @@ TEST(LegacyTest, MultipleInheritance)
 
     EXPECT_EQ(1, sut.Resolve<Base1>()->GetBase1Value());
     EXPECT_EQ(2, sut.Resolve<Base2>()->GetBase2Value());
-}
-
-TEST(LegacyTest, RegisterInstance)
-{
-    Container sut;
-    auto instance = std::make_shared<DefaultConstructable>();
-
-    sut.RegisterInstance(instance);
-
-    auto resolved = sut.Resolve<DefaultConstructable>();
-
-    ASSERT_EQ(instance, resolved);
 }
 
 }

@@ -110,17 +110,4 @@ TEST(RegisterResolveTest, RegisterInstance)
     ASSERT_EQ(instance, resolved);
 }
 
-// TODO: move into lifetime tests
-TEST(RegisterResolveTest, UnmodifiedRegistrationIsTransient)
-{
-    Container sut;
-
-    sut.RegisterType<A>();
-
-    auto resolved1 = sut.Resolve<A>();
-    auto resolved2 = sut.Resolve<A>();
-
-    EXPECT_NE(resolved1, resolved2);
-}
-
 }

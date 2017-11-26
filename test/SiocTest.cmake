@@ -10,6 +10,7 @@ set(SiocTest_C
 set(SiocTest_CPP
     Detail/TypeInfoTest.cpp
     LegacyTest.cpp
+    LifetimeTest.cpp
     RegisterResolveTest.cpp
 )
 
