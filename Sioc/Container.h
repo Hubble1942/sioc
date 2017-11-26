@@ -74,31 +74,6 @@ public:
     }
 
     /// <summary>
-    /// Registers the type.
-    /// </summary>
-    /// <param name="delegate">The delegate constructing the instance.</param>
-    // TODO: Get rid if this one
-    template<typename T>
-    Detail::RegistrationModifier<T> RegisterType(std::function<T* (const Container&)> delegate)
-    {
-        return Register([delegate](const Container & c)
-        {
-            return std::shared_ptr<T>(delegate(c));
-        });
-    }
-
-    /// <summary>
-    /// Registers the factory.
-    /// </summary>
-    /// <param name="delegate">The delegate constructing the instance.</param>
-    // TODO: Get rid if this one
-    template<typename T>
-    Detail::RegistrationModifier<T> RegisterFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
-    {
-        return Register(delegate);
-    }
-
-    /// <summary>
     /// Registers an instance.
     /// </summary>
     /// <param name="instance">The instance.</param>
@@ -165,17 +140,9 @@ private:
     Detail::ActivatorRegistry registry_;
 };
 
-// legacy macros
-#define CREATE0(statement) [](const Sioc::Container&) -> decltype(statement) { return statement; }
-#define CREATE(statement) [](const Sioc::Container& c) -> decltype(statement) { return statement; }
+#define FACTORY(type, ...) [](const Sioc::Container& c) -> std::shared_ptr<type> { (void)c; return std::make_shared<type>(__VA_ARGS__); }
 #define INJECT(type) c.Resolve<type>()
 #define INJECT_NAMED(type, name) c.ResolveNamed<type>(name)
 #define INJECT_ALL(type) c.ResolveAll<type>()
-
-// Sioc 2.0 Macros
-#define SIOC_CREATE(type, ...) [](const Sioc::Container& c) -> std::shared_ptr<type> { (void)c; return std::make_shared<type>(__VA_ARGS__); }
-#define SIOC_INJECT(type) c.Resolve<type>()
-#define SIOC_INJECT_NAMED(type, name) c.ResolveNamed<type>(name)
-#define SIOC_INJECT_ALL(type) c.ResolveAll<type>()
 
 }
