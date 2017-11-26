@@ -45,38 +45,11 @@ namespace Sioc
 class Container : private boost::noncopyable
 {
 public:
-    /// <summary>
-    /// Registers the type.
-    /// </summary>
-    template<typename T>
-    Detail::RegistrationModifier<T> RegisterType()
-    {
-        return RegisterType<T>([](const Container&)
-        {
-            return std::make_shared<T>();
-        });
-    }
 
     /// <summary>
-    /// Registers the type.
+    /// Registers a delegate taking a <c>const Container&</c> as argumend and returning an instance.
     /// </summary>
-    /// <param name="delegate">The delegate constructing the instance.</param>
-    template<typename T>
-    Detail::RegistrationModifier<T> RegisterType(std::function<std::shared_ptr<T>(const Container&)> delegate)
-    {
-        auto instanceFactory = std::make_shared<Detail::InstanceFactory<T>>(delegate);
-
-        Detail::RegistrationModifier<T> registrationModifier(registry_, instanceFactory);
-
-        registrationModifier.template As<T>();
-
-        return registrationModifier;
-    }
-
-    /// <summary>
-    /// Registers the type.
-    /// </summary>
-    /// <param name="delegate">The delegate constructing the instance.</param>
+    /// <param name="delegate">The delegate.</param>
     template<typename D, typename T = typename Detail::DeduceReturnType<D>::Type>
     Detail::RegistrationModifier<T> Register(D delegate)
     {
@@ -87,6 +60,29 @@ public:
         registrationModifier.template As<T>();
 
         return registrationModifier;
+    }
+
+    /// <summary>
+    /// Registers a (for now default constructible) type.
+    /// </summary>
+    template<typename T>
+    Detail::RegistrationModifier<T> RegisterType()
+    {
+        return Register([](const Container&)
+        {
+            return std::make_shared<T>();
+        });
+    }
+
+    /// <summary>
+    /// Registers the type.
+    /// </summary>
+    /// <param name="delegate">The delegate constructing the instance.</param>
+    // TODO: Get rid if this one
+    template<typename T>
+    Detail::RegistrationModifier<T> RegisterType(std::function<std::shared_ptr<T>(const Container&)> delegate)
+    {
+        return Register(delegate);
     }
 
     /// <summary>

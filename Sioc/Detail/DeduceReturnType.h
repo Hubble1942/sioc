@@ -32,10 +32,13 @@ namespace Detail
 template<typename D>
 struct DeduceReturnType
 {
+private:
     static D GetDelegate();
     static Container GetContainer();
 
     using PtrType = decltype(GetDelegate()(GetContainer()));
+
+public:
     using Type = typename PtrType::element_type;
 };
 
