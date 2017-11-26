@@ -27,55 +27,6 @@
 namespace Sioc
 {
 
-TEST(LegacyTest, MultipleRegistrationsInOneAreIgnored)
-{
-    Container sut;
-
-    sut.RegisterType<Derived>().As<Base>().As<Base>().As<Base>();
-
-    auto bases = sut.ResolveAll<Base>();
-    ASSERT_EQ(1, bases.size());
-}
-
-TEST(LegacyTest, DerivedAsBase)
-{
-    Container sut;
-
-    sut.RegisterType<Derived>().As<Base>();
-
-    auto base = sut.Resolve<Base>();
-    ASSERT_NE(nullptr, base);
-
-    auto derived = std::dynamic_pointer_cast<Derived>(base);
-    ASSERT_NE(nullptr, derived);
-}
-
-TEST(LegacyTest, DerivedAsMiddleAndBase)
-{
-    Container sut;
-
-    sut.RegisterType<Derived>().As<Middle>().As<Base>();
-
-    auto base = sut.Resolve<Base>();
-    ASSERT_NE(nullptr, base);
-
-    auto middle = std::dynamic_pointer_cast<Middle>(base);
-    ASSERT_NE(nullptr, middle);
-
-    auto derived = std::dynamic_pointer_cast<Derived>(base);
-    ASSERT_NE(nullptr, derived);
-}
-
-TEST(LegacyTest, AsKeepsOriginalRegistration)
-{
-    Container sut;
-
-    sut.RegisterType<Derived>().As<Base>();
-
-    auto derived = sut.Resolve<Derived>();
-    ASSERT_NE(nullptr, derived);
-}
-
 TEST(LegacyTest, NamedRightNameGivesInstance)
 {
     Container sut;
@@ -107,32 +58,6 @@ TEST(LegacyTest, NamedIsStillAccessibleWithoutName)
     auto instance = sut.Resolve<DefaultConstructable>();
 
     ASSERT_NE(nullptr, instance);
-}
-
-TEST(LegacyTest, CtorInjectRaw)
-{
-    Container sut;
-
-    sut.RegisterType<Derived>().As<Base>();
-    sut.RegisterFactory<BaseHolder>([](const Container & c)
-    {
-        return std::make_shared<BaseHolder>(c.Resolve<Base>());
-    });
-
-    auto instance = sut.Resolve<BaseHolder>();
-
-    ASSERT_NE(nullptr, instance);
-    EXPECT_NE(nullptr, instance->base_);
-}
-
-TEST(LegacyTest, MultipleInheritance)
-{
-    Container sut;
-
-    sut.RegisterType<Multiple>().As<Base1>().As<Base2>();
-
-    EXPECT_EQ(1, sut.Resolve<Base1>()->GetBase1Value());
-    EXPECT_EQ(2, sut.Resolve<Base2>()->GetBase2Value());
 }
 
 }

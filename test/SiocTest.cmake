@@ -8,6 +8,7 @@ set(SiocTest_C
 )
 
 set(SiocTest_CPP
+    AsTypeTest.cpp
     Detail/TypeInfoTest.cpp
     LegacyTest.cpp
     LifetimeTest.cpp
