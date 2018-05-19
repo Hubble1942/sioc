@@ -21,17 +21,12 @@
 // THE SOFTWARE.
 #pragma once
 
-// local
 #include "ActivatorRegistry.h"
 #include "InstanceFactory.h"
 #include "GenericActivator.h"
-
-// STL
+#include <boost/noncopyable.hpp>
 #include <type_traits>
 #include <unordered_map>
-
-// boost
-#include <boost/noncopyable.hpp>
 
 namespace Sioc
 {
@@ -45,9 +40,9 @@ private:
     typedef std::unordered_map<Detail::TypeInfo::IdType, std::shared_ptr<const IActivator>, boost::hash<Detail::TypeInfo::IdType>> Activators;
 
 public:
-    RegistrationModifier(ActivatorRegistry& registry, std::shared_ptr<InstanceFactory<RegisterType>> instanceFactory)
+    RegistrationModifier(ActivatorRegistry& registry, const std::shared_ptr<InstanceFactory<RegisterType>>& instanceFactory)
         : registry_(registry),
-          instanceFactory_(std::move(instanceFactory))
+          instanceFactory_(instanceFactory)
     {}
 
     RegistrationModifier(RegistrationModifier&& other)

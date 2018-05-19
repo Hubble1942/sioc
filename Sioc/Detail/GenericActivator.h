@@ -21,11 +21,9 @@
 // THE SOFTWARE.
 #pragma once
 
-// local
 #include "IActivator.h"
-
-// boost
 #include <boost/noncopyable.hpp>
+#include <memory>
 
 namespace Sioc
 {
@@ -36,8 +34,8 @@ template<typename TargetType, typename SourceType>
 class GenericActivator : public IActivator, private boost::noncopyable
 {
 public:
-    explicit GenericActivator(std::shared_ptr<const InstanceFactory<SourceType>> instanceFactory)
-        : instanceFactory_(std::move(instanceFactory))
+    explicit GenericActivator(const std::shared_ptr<const InstanceFactory<SourceType>>& instanceFactory)
+        : instanceFactory_(instanceFactory)
     {
         static_assert(std::is_base_of<TargetType, SourceType>::value, "TargetType must be base of SourceType");
     }
