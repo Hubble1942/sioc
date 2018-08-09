@@ -23,8 +23,10 @@
 
 // dummy cpp file to make cmake generate me a visual studio project for the header only lib
 #include "Container.h"
+#include "Lazy.h"
 
-namespace {
+namespace
+{
 void foo()
 {}
 }

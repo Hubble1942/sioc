@@ -21,6 +21,7 @@ set(Sioc_H
     Detail/IsCompleteType.h
     Detail/RegistrationModifier.h
     Detail/TypeInfo.h
+    Lazy.h
 )
 
 
