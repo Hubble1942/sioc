@@ -4,15 +4,9 @@
 ###############################################################################
 ### General cmake settings
 ###############################################################################
-cmake_minimum_required (VERSION 3.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.14)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 project (Sioc)
-
-# enable new, non-deprecated behavior for the usage of PackageName_ROOT variables.
-# see https://cmake.org/cmake/help/v3.12/policy/CMP0074.html
-if(POLICY CMP0074)
-    cmake_policy(SET CMP0074 NEW)
-endif()
 
 ###############################################################################
 ### boost Stuff
