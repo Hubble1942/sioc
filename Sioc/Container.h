@@ -36,113 +36,114 @@
 namespace Sioc
 {
 
-/// <summary>
-/// The simple inversion of control container.
-/// </summary>
-class Container : private boost::noncopyable
-{
-public:
-
     /// <summary>
-    /// Registers a delegate taking a <c>const Container&</c> as argumend and returning an instance.
+    /// The simple inversion of control container.
     /// </summary>
-    /// <param name="delegate">The delegate.</param>
-    template<typename D, typename T = typename Detail::DeduceReturnType<D>::Type>
-    Detail::RegistrationModifier<T> Register(D delegate)
+    class Container : private boost::noncopyable
     {
-        auto instanceFactory = std::make_shared<Detail::InstanceFactory<T>>(delegate);
+    public:
 
-        Detail::RegistrationModifier<T> registrationModifier(registry_, instanceFactory);
-
-        registrationModifier.template As<T>();
-
-        return registrationModifier;
-    }
-
-    /// <summary>
-    /// Registers a (for now default constructible) type.
-    /// </summary>
-    template<typename T>
-    Detail::RegistrationModifier<T> RegisterType()
-    {
-        static_assert(std::is_default_constructible<T>(), "T must be default constructible");
-
-        return Register([](const Container&)
+        /// <summary>
+        /// Registers a delegate taking a <c>const Container&</c> as argumend and returning an instance.
+        /// </summary>
+        /// <param name="delegate">The delegate.</param>
+        template<typename D, typename T = typename Detail::DeduceReturnType<D>::Type>
+        Detail::RegistrationModifier<T> Register(D delegate)
         {
-            return std::make_shared<T>();
-        });
-    }
+            auto instanceFactory = std::make_shared<Detail::InstanceFactory<T>>(delegate);
 
-    /// <summary>
-    /// Registers an instance.
-    /// </summary>
-    /// <param name="instance">The instance.</param>
-    template<typename T>
-    Detail::RegistrationModifier<T> RegisterInstance(const std::shared_ptr<T>& instance)
-    {
-        return Register([instance](const Container&)
-        {
-            return instance;
-        });
-    }
+            Detail::RegistrationModifier<T> registrationModifier(registry_, instanceFactory);
 
-    /// <summary>
-    /// Resolves an instance of a specified type.
-    /// </summary>
-    template<typename T>
-    std::shared_ptr<T> Resolve() const
-    {
-        static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
+            registrationModifier.template As<T>();
 
-        return ResolveNamed<T>("");
-    }
-
-    /// <summary>
-    /// Resolves an instances of a specified type for a specified name.
-    /// </summary>
-    template<typename T>
-    std::shared_ptr<T> ResolveNamed(const std::string& name) const
-    {
-        static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
-
-        auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(name));
-
-        if (!activators.empty())
-        {
-            return std::static_pointer_cast<T>(activators.back()->Activate(*this));
+            return registrationModifier;
         }
 
-        return std::shared_ptr<T>();
-    }
-
-    /// <summary>
-    /// Resolves all instances of a specified type.
-    /// </summary>
-    template<typename T>
-    std::vector<std::shared_ptr<T>> ResolveAll() const
-    {
-        static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
-
-        auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(""));
-
-        std::vector<std::shared_ptr<T>> instances;
-        instances.reserve(activators.size());
-
-        for (auto activator : activators)
+        /// <summary>
+        /// Registers a (for now default constructible) type.
+        /// </summary>
+        template<typename T>
+        Detail::RegistrationModifier<T> RegisterType()
         {
-            instances.push_back(std::static_pointer_cast<T>(activator->Activate(*this)));
+            static_assert(std::is_default_constructible<T>(), "T must be default constructible");
+
+            return Register([](const Container&)
+                {
+                    return std::make_shared<T>();
+                });
         }
 
-        return instances;
-    }
+        /// <summary>
+        /// Registers an instance.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        template<typename T>
+        Detail::RegistrationModifier<T> RegisterInstance(const std::shared_ptr<T>& instance)
+        {
+            return Register([instance](const Container&)
+                {
+                    return instance;
+                });
+        }
 
-private:
-    Detail::ActivatorRegistry registry_;
-};
+        /// <summary>
+        /// Resolves an instance of a specified type.
+        /// </summary>
+        template<typename T>
+        std::shared_ptr<T> Resolve() const
+        {
+            static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
+
+            return ResolveNamed<T>("");
+        }
+
+        /// <summary>
+        /// Resolves an instances of a specified type for a specified name.
+        /// </summary>
+        template<typename T>
+        std::shared_ptr<T> ResolveNamed(const std::string& name) const
+        {
+            static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
+
+            auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(name));
+
+            if (!activators.empty())
+            {
+                return std::static_pointer_cast<T>(activators.back()->Activate(*this));
+            }
+
+            return std::shared_ptr<T>();
+        }
+
+        /// <summary>
+        /// Resolves all instances of a specified type.
+        /// </summary>
+        template<typename T>
+        std::vector<std::shared_ptr<T>> ResolveAll() const
+        {
+            static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
+
+            auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(""));
+
+            std::vector<std::shared_ptr<T>> instances;
+            instances.reserve(activators.size());
+
+            for (auto activator : activators)
+            {
+                instances.push_back(std::static_pointer_cast<T>(activator->Activate(*this)));
+            }
+
+            return instances;
+        }
+
+    private:
+        Detail::ActivatorRegistry registry_;
+    };
 
 #define TYPE(type, ...) [=](const Sioc::Container& c) -> std::shared_ptr<type> { (void)c; return std::make_shared<type>(__VA_ARGS__); }
 #define FACTORY(statement) [=](const Sioc::Container& c) -> decltype(statement) { (void)c; return statement; }
 #define INJECT(type) c.Resolve<type>()
+#define INJECT_FACTORY(type) [&c]() { return INJECT(type); }
 #define INJECT_NAMED(type, name) c.ResolveNamed<type>(name)
 #define INJECT_ALL(type) c.ResolveAll<type>()
 
