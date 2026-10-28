@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 #pragma once
 
-// STL
 #include <cstddef>
 #include <functional>
 #include <typeinfo>
@@ -29,9 +28,7 @@
 #include <utility>
 #include <string>
 
-namespace Sioc
-{
-namespace Detail
+namespace Sioc::Detail
 {
 
 /// <summary>
@@ -72,5 +69,4 @@ public:
     }
 };
 
-}
 }

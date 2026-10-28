@@ -21,17 +21,15 @@
 // THE SOFTWARE.
 #pragma once
 
-// STL
 #include <functional>
 #include <memory>
 
 namespace Sioc
 {
-
-// local forwards
 class Container;
+}
 
-namespace Detail
+namespace Sioc::Detail
 {
 
 enum class LifeCyclePolicy
@@ -95,5 +93,4 @@ private:
     mutable std::weak_ptr<T> weakSingleProduct_;
 };
 
-}
 }

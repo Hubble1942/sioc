@@ -23,10 +23,10 @@
 
 namespace Sioc
 {
-
 class Container;
+}
 
-namespace Detail
+namespace Sioc::Detail
 {
 
 /// <summary>
@@ -45,5 +45,4 @@ public:
     using Type = typename PtrType::element_type;
 };
 
-}
 }

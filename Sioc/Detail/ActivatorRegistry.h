@@ -21,20 +21,15 @@
 // THE SOFTWARE.
 #pragma once
 
-// local
 #include "TypeInfo.h"
 
-// STL
 #include <memory>
 #include <unordered_map>
 #include <list>
 
-namespace Sioc
-{
-namespace Detail
+namespace Sioc::Detail
 {
 
-// local forwards
 class IActivator;
 
 /// <summary>
@@ -88,5 +83,4 @@ private:
     Activators empty_;
 };
 
-}
 }

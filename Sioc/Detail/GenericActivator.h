@@ -24,9 +24,7 @@
 #include "IActivator.h"
 #include <memory>
 
-namespace Sioc
-{
-namespace Detail
+namespace Sioc::Detail
 {
 
 template<typename TargetType, typename SourceType>
@@ -51,5 +49,4 @@ private:
     std::shared_ptr<const InstanceFactory<SourceType>> instanceFactory_;
 };
 
-}
 }
