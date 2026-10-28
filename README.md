@@ -35,9 +35,9 @@ And register some types:
 
 ```cpp
 container.RegisterType<DefaultConstructable>();
-container.RegisterType<NonDefaultCtor>([](const Container&) { return std::make_shared<NonDefaultCtor>(42); });
+container.Register([](const Sioc::Container&) { return std::make_shared<NonDefaultCtor>(42); });
 container.RegisterType<Derived>().Named<Middle>("Foo").As<Base>().SingleInstance();
-container.RegisterType<BaseHolder>(CREATE(std::make_shared<BaseHolder>(INJECT(Base)))).WeakSingleInstance();
+container.Register(TYPE(BaseHolder, INJECT(Base))).WeakSingleInstance();
 ```
 
 Now you're ready to resolv'em:
@@ -49,6 +49,26 @@ auto c = container.ResolveAll<BaseHolder>();
 ```
 
 Have a look at the tests for further examples.
+
+### Injection helpers
+
+`TYPE` and `FACTORY` create the delegate passed to `Register`. Within their arguments, the
+`INJECT` macros resolve the dependencies from the container:
+
+| Macro | Result |
+|---|---|
+| `TYPE(type, args...)` | Creates `type` with `std::make_shared<type>(args...)` |
+| `FACTORY(statement)` | Creates the instance returned by `statement` |
+| `INJECT(type)` | `std::shared_ptr<type>` |
+| `INJECT_NAMED(type, name)` | `std::shared_ptr<type>` registered with `name` |
+| `INJECT_ALL(type)` | `std::vector<std::shared_ptr<type>>` with all registrations of `type` |
+| `INJECT_FACTORY(type)` | Function returning a `std::shared_ptr<type>` on each call |
+| `INJECT_LAZY(type)` | `Sioc::Lazy<type>` resolving on first access (requires `<Sioc/Lazy.h>`) |
+
+```cpp
+container.Register(TYPE(Client, INJECT_NAMED(Middle, "Foo"), INJECT_ALL(Base), INJECT_FACTORY(Service), INJECT_LAZY(Service)));
+container.Register(FACTORY(std::make_shared<BaseHolder>(INJECT(Base))));
+```
 
 ## Testing
 
