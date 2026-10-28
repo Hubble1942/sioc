@@ -1,6 +1,6 @@
 @ECHO OFF
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: (c) by Volirium AG
+:: (c) by Christian Ewald
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Scans the project folder for sources to include into the build.
 :: Must be run each time a source file has been added/removed.

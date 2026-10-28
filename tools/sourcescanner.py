@@ -1,6 +1,6 @@
 #! python3
 # -*- coding: utf-8 -*-
-__copyright = "(c) by Volirium AG"
+__copyright = "(c) by Christian Ewald"
 
 """
 Scans the project for source files and generates cmake files listing them.

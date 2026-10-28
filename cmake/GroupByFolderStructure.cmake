@@ -1,4 +1,4 @@
-# (c) by Volirium AG
+# (c) by Christian Ewald
 
 # groups source files by their folder structure
 macro(group_by_folder_structure FILE_LIST)
