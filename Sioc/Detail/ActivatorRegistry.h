@@ -29,10 +29,6 @@
 #include <unordered_map>
 #include <list>
 
-// boost
-#include <boost/noncopyable.hpp>
-#include <boost/functional/hash.hpp>
-
 namespace Sioc
 {
 namespace Detail
@@ -44,7 +40,7 @@ class IActivator;
 /// <summary>
 /// The registry mapping registered types to their activators.
 /// </summary>
-class ActivatorRegistry : private boost::noncopyable
+class ActivatorRegistry
 {
 public:
     /// <summary>
@@ -53,9 +49,13 @@ public:
     typedef std::list<std::shared_ptr<const Detail::IActivator>> Activators;
 
 private:
-    typedef std::unordered_map<Detail::TypeInfo::IdType, Activators, boost::hash<Detail::TypeInfo::IdType>> Registry;
+    typedef std::unordered_map<Detail::TypeInfo::IdType, Activators, Detail::TypeInfo::IdHash> Registry;
 
 public:
+    ActivatorRegistry() = default;
+    ActivatorRegistry(const ActivatorRegistry&) = delete;
+    ActivatorRegistry& operator=(const ActivatorRegistry&) = delete;
+
     /// <summary>
     /// Inserts an activator for the specified identifier.
     /// </summary>

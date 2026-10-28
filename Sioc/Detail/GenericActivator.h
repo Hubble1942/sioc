@@ -22,7 +22,6 @@
 #pragma once
 
 #include "IActivator.h"
-#include <boost/noncopyable.hpp>
 #include <memory>
 
 namespace Sioc
@@ -31,7 +30,7 @@ namespace Detail
 {
 
 template<typename TargetType, typename SourceType>
-class GenericActivator : public IActivator, private boost::noncopyable
+class GenericActivator : public IActivator
 {
 public:
     explicit GenericActivator(const std::shared_ptr<const InstanceFactory<SourceType>>& instanceFactory)
@@ -39,6 +38,9 @@ public:
     {
         static_assert(std::is_base_of<TargetType, SourceType>::value, "TargetType must be base of SourceType");
     }
+
+    GenericActivator(const GenericActivator&) = delete;
+    GenericActivator& operator=(const GenericActivator&) = delete;
 
     virtual std::shared_ptr<void> Activate(const Container& container) const
     {

@@ -25,9 +25,6 @@
 #include <functional>
 #include <memory>
 
-// boost
-#include <boost/noncopyable.hpp>
-
 namespace Sioc
 {
 
@@ -45,13 +42,16 @@ enum class LifeCyclePolicy
 };
 
 template<typename T>
-class InstanceFactory : private boost::noncopyable
+class InstanceFactory
 {
 public:
     explicit InstanceFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
         : delegate_(delegate),
           lifeCyclePolicy_(LifeCyclePolicy::Transient)
     {}
+
+    InstanceFactory(const InstanceFactory&) = delete;
+    InstanceFactory& operator=(const InstanceFactory&) = delete;
 
     std::shared_ptr<T> Produce(const Container& container) const
     {

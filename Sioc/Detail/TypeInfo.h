@@ -22,6 +22,8 @@
 #pragma once
 
 // STL
+#include <cstddef>
+#include <functional>
 #include <typeinfo>
 #include <typeindex>
 #include <utility>
@@ -42,6 +44,19 @@ public:
     /// The type-identifier type.
     /// </summary>
     typedef std::pair<std::type_index, std::string> IdType;
+
+    /// <summary>
+    /// Hash function for type identifiers.
+    /// </summary>
+    struct IdHash
+    {
+        std::size_t operator()(const IdType& id) const
+        {
+            std::size_t seed = std::hash<std::type_index>()(id.first);
+            seed ^= std::hash<std::string>()(id.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            return seed;
+        }
+    };
 
 private:
     TypeInfo();

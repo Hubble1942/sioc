@@ -27,7 +27,6 @@
 #include "Detail/IsCompleteType.h"
 #include "Detail/RegistrationModifier.h"
 #include "Detail/TypeInfo.h"
-#include <boost/noncopyable.hpp>
 #include <functional>
 #include <memory>
 #include <type_traits>
@@ -39,9 +38,12 @@ namespace Sioc
     /// <summary>
     /// The simple inversion of control container.
     /// </summary>
-    class Container : private boost::noncopyable
+    class Container
     {
     public:
+        Container() = default;
+        Container(const Container&) = delete;
+        Container& operator=(const Container&) = delete;
 
         /// <summary>
         /// Registers a delegate taking a <c>const Container&</c> as argumend and returning an instance.

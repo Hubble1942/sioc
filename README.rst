@@ -6,10 +6,10 @@ Yet another IoC container for C++
 The bullet list:
 
 * Header only
-* Requires C++11
-* With a tiny bit of help from boost
+* Requires C++17
+* No dependencies besides the standard library
 * Some ideas borrowed from `Autofac <http://autofac.org/>`_ and `Hypodermic <https://github.com/ybainier/Hypodermic>`_
-* Tested with GCC and Visual Studio 2013
+* Tested with GCC
 
 Main Goals
 ----------
@@ -56,12 +56,13 @@ Have a look at the tests for further examples.
 Testing
 -------
 
-To build and run the tests, you'll need CMake >= 3.0::
+To build and run the tests, you'll need CMake >= 3.16::
 
     ~/Sioc$ mkdir build
     ~/Sioc/build$ cd build
     ~/Sioc/build$ cmake ..
     ~/Sioc/build$ make
+    ~/Sioc/build$ test/SiocTest
 
 
 License
