@@ -10,6 +10,7 @@ set(SiocTest_C
 set(SiocTest_CPP
     AsTypeTest.cpp
     Detail/TypeInfoTest.cpp
+    LazyTest.cpp
     LifetimeTest.cpp
     NamedTest.cpp
     RegisterResolveTest.cpp

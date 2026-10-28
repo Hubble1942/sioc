@@ -12,7 +12,11 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        run: >-
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          -Werror=author -Werror=deprecated
+          -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+          -DCMAKE_LINK_WARNING_AS_ERROR=ON
 
       - name: Build
         run: cmake --build build --parallel

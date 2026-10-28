@@ -56,7 +56,7 @@ Have a look at the tests for further examples.
 Testing
 -------
 
-To build and run the tests, you'll need CMake >= 3.16::
+To build and run the tests, you'll need CMake >= 3.19::
 
     ~/Sioc$ mkdir build
     ~/Sioc/build$ cd build

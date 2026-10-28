@@ -8,7 +8,6 @@ set(Sioc_C
 )
 
 set(Sioc_CPP
-    dummy.cpp
 )
 
 set(Sioc_H
