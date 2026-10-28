@@ -83,4 +83,17 @@ TEST(LazyTest, InjectLazyResolvesOnFirstAccess)
     EXPECT_EQ(sut.Resolve<A>(), holder->a_.Get());
 }
 
+TEST(LazyTest, InjectLazyWithinFactory)
+{
+    Container sut;
+
+    sut.RegisterType<A>().SingleInstance();
+    sut.Register(FACTORY(std::make_shared<LazyAHolder>(INJECT_LAZY(A))));
+
+    auto holder = sut.Resolve<LazyAHolder>();
+
+    EXPECT_FALSE(holder->a_.IsActivated());
+    EXPECT_EQ(sut.Resolve<A>(), holder->a_.Get());
+}
+
 }

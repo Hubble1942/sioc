@@ -143,7 +143,7 @@ namespace Sioc
     };
 
 #define TYPE(type, ...) [=](const Sioc::Container& c) -> std::shared_ptr<type> { (void)c; return std::make_shared<type>(__VA_ARGS__); }
-#define FACTORY(statement) [=](const Sioc::Container& c) -> decltype(statement) { (void)c; return statement; }
+#define FACTORY(statement) [=](const Sioc::Container& c) { (void)c; return statement; }
 #define INJECT(type) c.Resolve<type>()
 #define INJECT_FACTORY(type) [&c]() { return INJECT(type); }
 #define INJECT_NAMED(type, name) c.ResolveNamed<type>(name)

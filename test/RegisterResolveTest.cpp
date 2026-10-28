@@ -110,4 +110,17 @@ TEST(RegisterResolveTest, RegisterInstance)
     ASSERT_EQ(instance, resolved);
 }
 
+TEST(RegisterResolveTest, FactoryStatementReturningReference)
+{
+    Container sut;
+    auto instance = std::make_shared<A>();
+    const auto& reference = instance;
+
+    sut.Register(FACTORY(reference));
+
+    auto resolved = sut.Resolve<A>();
+
+    ASSERT_EQ(instance, resolved);
+}
+
 }
