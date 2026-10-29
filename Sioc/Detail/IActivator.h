@@ -28,8 +28,7 @@ namespace Sioc
 class Container;
 }
 
-namespace Sioc::Detail
-{
+namespace Sioc { namespace Detail {
 
 /// <summary>
 /// Common interface for all activators.
@@ -50,4 +49,4 @@ public:
     virtual std::shared_ptr<void> Activate(const Container& container) const = 0;
 };
 
-}
+} }

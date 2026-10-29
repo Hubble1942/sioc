@@ -24,8 +24,7 @@
 #include <gtest/gtest.h>
 #include <Sioc/Detail/TypeInfo.h>
 
-namespace Sioc::Detail
-{
+namespace Sioc { namespace Detail {
 
 using namespace TestHelpers;
 
@@ -53,4 +52,4 @@ TEST(TypeInfoTest, DifferentNameDifferentInfo)
     EXPECT_NE(TypeInfo::Id<Aggregate>("Bar"), TypeInfo::Id<Aggregate>("Foo"));
 }
 
-}
+} }

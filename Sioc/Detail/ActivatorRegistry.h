@@ -27,8 +27,7 @@
 #include <unordered_map>
 #include <list>
 
-namespace Sioc::Detail
-{
+namespace Sioc { namespace Detail {
 
 class IActivator;
 
@@ -83,4 +82,4 @@ private:
     Activators empty_;
 };
 
-}
+} }

@@ -27,8 +27,7 @@
 #include <type_traits>
 #include <unordered_map>
 
-namespace Sioc::Detail
-{
+namespace Sioc { namespace Detail {
 
 template<typename RegisterType>
 class RegistrationModifier
@@ -95,4 +94,4 @@ private:
     Activators activators_;
 };
 
-}
+} }

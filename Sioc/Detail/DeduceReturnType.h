@@ -26,8 +26,7 @@ namespace Sioc
 class Container;
 }
 
-namespace Sioc::Detail
-{
+namespace Sioc { namespace Detail {
 
 /// <summary>
 /// Helper to deduce the return type of a delegate.
@@ -45,4 +44,4 @@ public:
     using Type = typename PtrType::element_type;
 };
 
-}
+} }

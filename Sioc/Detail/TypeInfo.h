@@ -28,8 +28,7 @@
 #include <utility>
 #include <string>
 
-namespace Sioc::Detail
-{
+namespace Sioc { namespace Detail {
 
 /// <summary>
 /// Static wrapper/helper class providing access to type identifiers.
@@ -69,4 +68,4 @@ public:
     }
 };
 
-}
+} }

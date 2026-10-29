@@ -29,8 +29,7 @@ namespace Sioc
 class Container;
 }
 
-namespace Sioc::Detail
-{
+namespace Sioc { namespace Detail {
 
 enum class LifeCyclePolicy
 {
@@ -93,4 +92,4 @@ private:
     mutable std::weak_ptr<T> weakSingleProduct_;
 };
 
-}
+} }

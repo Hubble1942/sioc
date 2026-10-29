@@ -23,8 +23,7 @@
 
 #include <memory>
 
-namespace Sioc::TestHelpers
-{
+namespace Sioc { namespace TestHelpers {
 
 class A {};
 
@@ -78,4 +77,4 @@ public:
     std::shared_ptr<Base> base_;
 };
 
-}
+} }

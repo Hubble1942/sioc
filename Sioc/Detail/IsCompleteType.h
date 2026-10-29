@@ -23,8 +23,7 @@
 
 #include <type_traits>
 
-namespace Sioc::Detail
-{
+namespace Sioc { namespace Detail {
 
 /// <summary>
 /// Evaluates if the specified type is complete.
@@ -37,4 +36,4 @@ template <class T>
 struct IsCompleteType<T, decltype(void(sizeof(T)))> : std::true_type
 {};
 
-}
+} }
