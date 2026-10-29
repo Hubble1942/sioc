@@ -5,7 +5,7 @@ Yet another IoC container for C++
 The bullet list:
 
 * Header only
-* Requires C++17
+* Requires C++14
 * No dependencies besides the standard library
 * Some ideas borrowed from [Autofac](http://autofac.org/) and [Hypodermic](https://github.com/ybainier/Hypodermic)
 * Tested with GCC
@@ -72,7 +72,7 @@ container.Register(FACTORY(std::make_shared<BaseHolder>(INJECT(Base))));
 
 ## Testing
 
-To build and run the tests, you'll need CMake >= 3.19:
+To build and run the tests, you'll need a C++17 compiler and CMake >= 3.19:
 
 ```sh
 ~/Sioc$ mkdir build
