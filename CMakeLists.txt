@@ -36,6 +36,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 add_subdirectory(external)
 add_subdirectory(Sioc)
 add_subdirectory(test)
+add_subdirectory(check)
 
 ###############################################################################
 ### Generate helper script to update cmake
