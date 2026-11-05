@@ -5,8 +5,7 @@
 ### General cmake settings
 ###############################################################################
 cmake_minimum_required(VERSION 3.19)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-project (Sioc)
+project(Sioc VERSION 4.0)
 
 ###############################################################################
 ### Compiler settings
@@ -37,10 +36,3 @@ add_subdirectory(external)
 add_subdirectory(Sioc)
 add_subdirectory(test)
 add_subdirectory(check)
-
-###############################################################################
-### Generate helper script to update cmake
-###############################################################################
-if(MSVC)
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/update_cmake.cmd "@echo off\ncls\ncall ..\\scansources.cmd\ncmake ..\n")
-endif()

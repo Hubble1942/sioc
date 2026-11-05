@@ -16,6 +16,3 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "Always use msvcrt.dll" FORCE)
 
 FetchContent_MakeAvailable(googletest)
-
-set_target_properties(gmock PROPERTIES FOLDER "external")
-set_target_properties(gtest PROPERTIES FOLDER "external")

@@ -1,10 +1,16 @@
 # Sioc - simple inversion of control container
 # /test
 
-include(GroupByFolderStructure)
-
-include(SiocTest.cmake)
-group_by_folder_structure(SiocTest_SRC)
+set(SiocTest_SRC
+    AsTypeTest.cpp
+    Detail/TypeInfoTest.cpp
+    InjectedTest.cpp
+    LazyTest.cpp
+    LifetimeTest.cpp
+    NamedTest.cpp
+    RegisterResolveTest.cpp
+    TestHelpers/SomeClasses.h
+)
 
 add_executable(SiocTest ${SiocTest_SRC})
 
