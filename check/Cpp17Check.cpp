@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// Uses all features of Sioc, so the templates get instantiated with C++14.
+// Uses all features of Sioc, so the templates get instantiated with C++17.
 
 #include <Sioc/Container.h>
 #include <Sioc/Lazy.h>
 
-namespace Sioc { namespace Cpp14Check {
+namespace Sioc { namespace Cpp17Check {
 
 namespace {
 

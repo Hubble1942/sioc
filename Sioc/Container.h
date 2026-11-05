@@ -63,7 +63,7 @@ namespace Sioc
         template<typename T>
         Detail::RegistrationModifier<T> RegisterType()
         {
-            static_assert(std::is_default_constructible<T>(), "T must be default constructible");
+            static_assert(std::is_default_constructible_v<T>, "T must be default constructible");
 
             return Register([](const Container&)
                 {

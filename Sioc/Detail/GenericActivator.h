@@ -35,7 +35,7 @@ public:
     explicit GenericActivator(std::shared_ptr<const InstanceFactory<SourceType>> instanceFactory)
         : instanceFactory_(std::move(instanceFactory))
     {
-        static_assert(std::is_base_of<TargetType, SourceType>::value, "TargetType must be base of SourceType");
+        static_assert(std::is_base_of_v<TargetType, SourceType>, "TargetType must be base of SourceType");
     }
 
     GenericActivator(const GenericActivator&) = delete;

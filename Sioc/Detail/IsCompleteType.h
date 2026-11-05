@@ -30,7 +30,7 @@ struct IsCompleteType : std::false_type
 {};
 
 template <class T>
-struct IsCompleteType<T, decltype(void(sizeof(T)))> : std::true_type
+struct IsCompleteType<T, std::void_t<decltype(sizeof(T))>> : std::true_type
 {};
 
 } }

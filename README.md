@@ -5,7 +5,7 @@ Yet another IoC container for C++
 The bullet list:
 
 * Header only
-* Requires C++14
+* Requires C++17; the headers avoid nested namespace definitions, so Qt 4's moc can read them
 * No dependencies besides the standard library
 * Some ideas borrowed from [Autofac](http://autofac.org/) and [Hypodermic](https://github.com/ybainier/Hypodermic)
 * Tested with GCC

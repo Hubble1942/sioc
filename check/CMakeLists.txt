@@ -2,13 +2,22 @@
 # /check
 
 # compiles the headers with the minimum language version required for using Sioc
-add_library(SiocCpp14Check OBJECT Cpp14Check.cpp)
+add_library(SiocCpp17Check OBJECT Cpp17Check.cpp)
 
-set_target_properties(SiocCpp14Check PROPERTIES
-    CXX_STANDARD 14
+set_target_properties(SiocCpp17Check PROPERTIES
+    CXX_STANDARD 17
 )
 
-# reject language extensions, e.g. C++17 nested namespace definitions
-target_compile_options(SiocCpp14Check PRIVATE
+# reject language extensions
+target_compile_options(SiocCpp17Check PRIVATE
     $<$<CXX_COMPILER_ID:GNU,Clang>:-pedantic-errors>
 )
+
+# Qt 4's moc fails on nested namespace definitions (namespace A::B), even in headers it only includes
+file(GLOB_RECURSE SIOC_HEADERS ${PROJECT_SOURCE_DIR}/Sioc/*.h)
+foreach(header ${SIOC_HEADERS})
+    file(STRINGS ${header} nested REGEX "^ *namespace +[A-Za-z0-9_]+::")
+    if(nested)
+        message(FATAL_ERROR "${header}: nested namespace definition, which Qt 4's moc can't parse: ${nested}")
+    endif()
+endforeach()

@@ -21,6 +21,8 @@
 // THE SOFTWARE.
 #pragma once
 
+#include <type_traits>
+
 namespace Sioc
 {
 class Container;
@@ -32,14 +34,7 @@ namespace Sioc { namespace Detail {
 template<typename D>
 struct DeduceReturnType
 {
-private:
-    static D GetDelegate();
-    static const Container& GetContainer();
-
-    using PtrType = decltype(GetDelegate()(GetContainer()));
-
-public:
-    using Type = typename PtrType::element_type;
+    using Type = typename std::invoke_result_t<D, const Container&>::element_type;
 };
 
 } }

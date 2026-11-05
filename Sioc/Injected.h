@@ -39,7 +39,7 @@ template<class T>
 class Injected
 {
     template<class U>
-    using IfConvertible = std::enable_if_t<std::is_convertible<T*, U*>::value>;
+    using IfConvertible = std::enable_if_t<std::is_convertible_v<T*, U*>>;
 
 public:
     using element_type = T;

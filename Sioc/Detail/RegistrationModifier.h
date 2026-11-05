@@ -69,7 +69,7 @@ public:
     template<typename T>
     RegistrationModifier& Named(const std::string& name)
     {
-        static_assert(std::is_base_of<T, RegisterType>::value, "T must be base of RegisterType");
+        static_assert(std::is_base_of_v<T, RegisterType>, "T must be base of RegisterType");
 
         activators_[TypeInfo::Id<T>(name)] = std::make_shared<GenericActivator<T, RegisterType>>(instanceFactory_);
 
