@@ -23,6 +23,7 @@
 
 #include <functional>
 #include <memory>
+#include <utility>
 
 namespace Sioc
 {
@@ -35,7 +36,7 @@ public:
     using Activator = std::function<std::shared_ptr<T>()>;
 
     explicit Lazy(Activator activator)
-        : activator_(activator)
+        : activator_(std::move(activator))
     {}
 
     /// Returns the service, resolving it on the first call.

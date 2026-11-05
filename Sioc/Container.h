@@ -31,6 +31,7 @@
 #include <functional>
 #include <memory>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 namespace Sioc
@@ -49,7 +50,7 @@ namespace Sioc
         template<typename D, typename T = typename Detail::DeduceReturnType<D>::Type>
         Detail::RegistrationModifier<T> Register(D delegate)
         {
-            auto instanceFactory = std::make_shared<Detail::InstanceFactory<T>>(delegate);
+            const auto instanceFactory = std::make_shared<Detail::InstanceFactory<T>>(std::move(delegate));
 
             Detail::RegistrationModifier<T> registrationModifier(registry_, instanceFactory);
 
@@ -72,9 +73,9 @@ namespace Sioc
 
         /// Registers an existing instance, which every resolve returns.
         template<typename T>
-        Detail::RegistrationModifier<T> RegisterInstance(const std::shared_ptr<T>& instance)
+        Detail::RegistrationModifier<T> RegisterInstance(std::shared_ptr<T> instance)
         {
-            return Register([instance](const Container&)
+            return Register([instance = std::move(instance)](const Container&)
                 {
                     return instance;
                 });
@@ -97,7 +98,7 @@ namespace Sioc
         {
             static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
 
-            auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(name));
+            const auto& activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(name));
 
             if (!activators.empty())
             {
@@ -113,12 +114,12 @@ namespace Sioc
         {
             static_assert(Detail::IsCompleteType<T>(), "Resolved types must be complete");
 
-            auto activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(""));
+            const auto& activators = registry_.GetAllForType(Detail::TypeInfo::Id<T>(""));
 
             std::vector<std::shared_ptr<T>> instances;
             instances.reserve(activators.size());
 
-            for (auto activator : activators)
+            for (const auto& activator : activators)
             {
                 instances.push_back(std::static_pointer_cast<T>(activator->Activate(*this)));
             }

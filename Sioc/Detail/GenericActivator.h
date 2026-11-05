@@ -23,15 +23,17 @@
 
 #include "IActivator.h"
 #include <memory>
+#include <type_traits>
+#include <utility>
 
 namespace Sioc { namespace Detail {
 
 template<typename TargetType, typename SourceType>
-class GenericActivator : public IActivator
+class GenericActivator final : public IActivator
 {
 public:
-    explicit GenericActivator(const std::shared_ptr<const InstanceFactory<SourceType>>& instanceFactory)
-        : instanceFactory_(instanceFactory)
+    explicit GenericActivator(std::shared_ptr<const InstanceFactory<SourceType>> instanceFactory)
+        : instanceFactory_(std::move(instanceFactory))
     {
         static_assert(std::is_base_of<TargetType, SourceType>::value, "TargetType must be base of SourceType");
     }
@@ -39,7 +41,7 @@ public:
     GenericActivator(const GenericActivator&) = delete;
     GenericActivator& operator=(const GenericActivator&) = delete;
 
-    virtual std::shared_ptr<void> Activate(const Container& container) const
+    std::shared_ptr<void> Activate(const Container& container) const override
     {
         return std::static_pointer_cast<TargetType>(instanceFactory_->Produce(container));
     }

@@ -23,9 +23,10 @@
 
 #include "TypeInfo.h"
 
+#include <list>
 #include <memory>
 #include <unordered_map>
-#include <list>
+#include <utility>
 
 namespace Sioc { namespace Detail {
 
@@ -35,25 +36,25 @@ class IActivator;
 class ActivatorRegistry
 {
 public:
-    typedef std::list<std::shared_ptr<const Detail::IActivator>> Activators;
+    using Activators = std::list<std::shared_ptr<const Detail::IActivator>>;
 
 private:
-    typedef std::unordered_map<Detail::TypeInfo::IdType, Activators, Detail::TypeInfo::IdHash> Registry;
+    using Registry = std::unordered_map<Detail::TypeInfo::IdType, Activators, Detail::TypeInfo::IdHash>;
 
 public:
     ActivatorRegistry() = default;
     ActivatorRegistry(const ActivatorRegistry&) = delete;
     ActivatorRegistry& operator=(const ActivatorRegistry&) = delete;
 
-    void Insert(const TypeInfo::IdType& id, const std::shared_ptr<const IActivator>& activator)
+    void Insert(const TypeInfo::IdType& id, std::shared_ptr<const IActivator> activator)
     {
-        registry_[id].push_back(activator);
+        registry_[id].push_back(std::move(activator));
     }
 
     /// Returns an empty list for an identifier nothing is registered for.
     const Activators& GetAllForType(const TypeInfo::IdType& id) const
     {
-        auto found = registry_.find(id);
+        const auto found = registry_.find(id);
 
         if (found != registry_.end())
         {

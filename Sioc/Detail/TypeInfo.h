@@ -34,22 +34,20 @@ namespace Sioc { namespace Detail {
 class TypeInfo
 {
 public:
-    typedef std::pair<std::type_index, std::string> IdType;
+    using IdType = std::pair<std::type_index, std::string>;
 
     struct IdHash
     {
         std::size_t operator()(const IdType& id) const
         {
             std::size_t seed = std::hash<std::type_index>()(id.first);
-            seed ^= std::hash<std::string>()(id.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= std::hash<std::string>()(id.second) + 0x9e3779b9 + (seed << 6U) + (seed >> 2U);
             return seed;
         }
     };
 
-private:
-    TypeInfo();
+    TypeInfo() = delete;
 
-public:
     /// An unnamed registration has the empty name.
     template<typename T>
     static IdType Id(const std::string& name)

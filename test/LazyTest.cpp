@@ -49,7 +49,7 @@ TEST(LazyTest, ActivatorIsNotCalledBeforeFirstAccess)
 {
     int activations = 0;
 
-    Lazy<A> sut([&activations]() { ++activations; return std::make_shared<A>(); });
+    Lazy<A> sut([&activations] { ++activations; return std::make_shared<A>(); });
 
     EXPECT_FALSE(sut.IsActivated());
     EXPECT_EQ(0, activations);
@@ -59,10 +59,10 @@ TEST(LazyTest, GetActivatesOnlyOnce)
 {
     int activations = 0;
 
-    Lazy<A> sut([&activations]() { ++activations; return std::make_shared<A>(); });
+    Lazy<A> sut([&activations] { ++activations; return std::make_shared<A>(); });
 
-    auto get1 = sut.Get();
-    auto get2 = sut.Get();
+    const auto& get1 = sut.Get();
+    const auto& get2 = sut.Get();
 
     EXPECT_TRUE(sut.IsActivated());
     EXPECT_EQ(1, activations);

@@ -49,24 +49,28 @@ public:
     {}
 
     template<class U, class = IfConvertible<U>>
+    // NOLINTNEXTLINE(*-explicit-constructor): the parameter it's passed to picks the conversion
     operator std::shared_ptr<U>() const&
     {
         return instance_;
     }
 
     template<class U, class = IfConvertible<U>>
+    // NOLINTNEXTLINE(*-explicit-constructor): the parameter it's passed to picks the conversion
     operator std::shared_ptr<U>() &&
     {
         return std::move(instance_);
     }
 
     template<class U, class = IfConvertible<U>>
+    // NOLINTNEXTLINE(*-explicit-constructor): the parameter it's passed to picks the conversion
     operator std::weak_ptr<U>() const
     {
         return instance_;
     }
 
     template<class U, class = IfConvertible<U>>
+    // NOLINTNEXTLINE(*-explicit-constructor): the parameter it's passed to picks the conversion
     operator U&() const
     {
         return *instance_;

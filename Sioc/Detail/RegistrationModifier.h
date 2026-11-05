@@ -24,8 +24,10 @@
 #include "ActivatorRegistry.h"
 #include "InstanceFactory.h"
 #include "GenericActivator.h"
+#include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <utility>
 
 namespace Sioc { namespace Detail {
 
@@ -33,15 +35,15 @@ template<typename RegisterType>
 class RegistrationModifier
 {
 private:
-    typedef std::unordered_map<Detail::TypeInfo::IdType, std::shared_ptr<const IActivator>, Detail::TypeInfo::IdHash> Activators;
+    using Activators = std::unordered_map<Detail::TypeInfo::IdType, std::shared_ptr<const IActivator>, Detail::TypeInfo::IdHash>;
 
 public:
-    RegistrationModifier(ActivatorRegistry& registry, const std::shared_ptr<InstanceFactory<RegisterType>>& instanceFactory)
+    RegistrationModifier(ActivatorRegistry& registry, std::shared_ptr<InstanceFactory<RegisterType>> instanceFactory)
         : registry_(registry),
-          instanceFactory_(instanceFactory)
+          instanceFactory_(std::move(instanceFactory))
     {}
 
-    RegistrationModifier(RegistrationModifier&& other)
+    RegistrationModifier(RegistrationModifier&& other) noexcept
         : registry_(other.registry_),
           instanceFactory_(std::move(other.instanceFactory_)),
           activators_(std::move(other.activators_))

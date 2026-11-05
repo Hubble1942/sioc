@@ -21,8 +21,10 @@
 // THE SOFTWARE.
 #pragma once
 
+#include <cstdint>
 #include <functional>
 #include <memory>
+#include <utility>
 
 namespace Sioc
 {
@@ -31,7 +33,7 @@ class Container;
 
 namespace Sioc { namespace Detail {
 
-enum class LifeCyclePolicy
+enum class LifeCyclePolicy : std::uint8_t
 {
     Transient,
     SingleInstance,
@@ -43,8 +45,7 @@ class InstanceFactory
 {
 public:
     explicit InstanceFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
-        : delegate_(delegate),
-          lifeCyclePolicy_(LifeCyclePolicy::Transient)
+        : delegate_(std::move(delegate))
     {}
 
     InstanceFactory(const InstanceFactory&) = delete;
@@ -87,7 +88,7 @@ public:
 
 private:
     std::function<std::shared_ptr<T>(const Container&)> delegate_;
-    LifeCyclePolicy lifeCyclePolicy_;
+    LifeCyclePolicy lifeCyclePolicy_ = LifeCyclePolicy::Transient;
     mutable std::shared_ptr<T> singleProduct_;
     mutable std::weak_ptr<T> weakSingleProduct_;
 };

@@ -34,7 +34,7 @@ namespace Sioc { namespace Detail {
 class IActivator
 {
 public:
-    virtual ~IActivator() {}
+    virtual ~IActivator() = default;
 
     /// Returns the instance as `std::shared_ptr<void>`, which the container casts back to the resolved type.
     virtual std::shared_ptr<void> Activate(const Container& container) const = 0;

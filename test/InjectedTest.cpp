@@ -68,10 +68,10 @@ public:
 
 }
 
-static_assert(!std::is_convertible<Injected<Derived>, Derived>::value, "an instance is never copied");
-static_assert(!std::is_convertible<Injected<Derived>, Base>::value, "an instance is never sliced");
-static_assert(!std::is_convertible<Injected<Base>, std::shared_ptr<Derived>>::value, "no downcast");
-static_assert(!std::is_convertible<Injected<Base>, Derived&>::value, "no downcast");
+static_assert(!std::is_convertible_v<Injected<Derived>, Derived>, "an instance is never copied");
+static_assert(!std::is_convertible_v<Injected<Derived>, Base>, "an instance is never sliced");
+static_assert(!std::is_convertible_v<Injected<Base>, std::shared_ptr<Derived>>, "no downcast");
+static_assert(!std::is_convertible_v<Injected<Base>, Derived&>, "no downcast");
 
 TEST(InjectedTest, ConvertsToTheSharedPtrOfABase)
 {
@@ -90,7 +90,7 @@ TEST(InjectedTest, MovesTheSharedPtrOutOfATemporary)
 
     std::shared_ptr<A> moved = std::move(sut);
 
-    EXPECT_EQ(nullptr, sut.Get());
+    EXPECT_EQ(nullptr, sut.Get()); // NOLINT(bugprone-use-after-move): checks that it was moved out
     EXPECT_EQ(1, moved.use_count());
 }
 

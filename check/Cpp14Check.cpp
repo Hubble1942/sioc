@@ -27,6 +27,8 @@
 
 namespace Sioc { namespace Cpp14Check {
 
+namespace {
+
 class A {};
 
 class B
@@ -41,6 +43,23 @@ public:
     C(const std::vector<std::shared_ptr<A>>&, const std::function<std::shared_ptr<A>()>&, const Lazy<A>&) {}
 };
 
+class D
+{
+public:
+    D(A& a, std::weak_ptr<A> weak, std::shared_ptr<A> shared)
+        : a_(&a),
+          weak_(std::move(weak)),
+          shared_(std::move(shared))
+    {}
+
+    A* a_;
+    std::weak_ptr<A> weak_;
+    std::shared_ptr<A> shared_;
+};
+
+}
+
+// NOLINTNEXTLINE(misc-use-internal-linkage): unused, an internal function would be a warning
 void UseAllFeatures()
 {
     Container container;
@@ -49,9 +68,11 @@ void UseAllFeatures()
     container.RegisterInstance(std::make_shared<A>()).WeakSingleInstance();
     container.Register(TYPE(B, INJECT_NAMED(A, "a")));
     container.Register(FACTORY(std::make_shared<C>(INJECT_ALL(A), INJECT_FACTORY(A), INJECT_LAZY(A))));
+    container.Register(TYPE(D, INJECT(A), INJECT(A), INJECT(A)));
 
     container.Resolve<B>();
     container.ResolveAll<C>();
+    container.Resolve<D>();
 }
 
 } }
