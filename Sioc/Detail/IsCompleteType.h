@@ -25,9 +25,6 @@
 
 namespace Sioc { namespace Detail {
 
-/// <summary>
-/// Evaluates if the specified type is complete.
-/// </summary>
 template <class T, class = void>
 struct IsCompleteType : std::false_type
 {};

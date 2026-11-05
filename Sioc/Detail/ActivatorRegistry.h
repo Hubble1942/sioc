@@ -31,15 +31,10 @@ namespace Sioc { namespace Detail {
 
 class IActivator;
 
-/// <summary>
-/// The registry mapping registered types to their activators.
-/// </summary>
+/// Maps the identifier of each registration to its activators.
 class ActivatorRegistry
 {
 public:
-    /// <summary>
-    /// Collection of activators.
-    /// </summary>
     typedef std::list<std::shared_ptr<const Detail::IActivator>> Activators;
 
 private:
@@ -50,21 +45,12 @@ public:
     ActivatorRegistry(const ActivatorRegistry&) = delete;
     ActivatorRegistry& operator=(const ActivatorRegistry&) = delete;
 
-    /// <summary>
-    /// Inserts an activator for the specified identifier.
-    /// </summary>
-    /// <param name="id">The type identifier.</param>
-    /// <param name="activator">The activator.</param>
     void Insert(const TypeInfo::IdType& id, const std::shared_ptr<const IActivator>& activator)
     {
         registry_[id].push_back(activator);
     }
 
-    /// <summary>
-    /// Gets the activators for a specified type.
-    /// </summary>
-    /// <param name="id">The type identifier.</param>
-    /// <returns>The activators.</returns>
+    /// Returns an empty list for an identifier nothing is registered for.
     const Activators& GetAllForType(const TypeInfo::IdType& id) const
     {
         auto found = registry_.find(id);

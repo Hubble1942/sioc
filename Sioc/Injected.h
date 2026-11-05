@@ -28,16 +28,13 @@
 namespace Sioc
 {
 
-/// <summary>
-/// A resolved instance as <c>INJECT</c> passes it on: it converts to what the parameter it is passed to
-/// asks for, the <c>std::shared_ptr</c> or <c>std::weak_ptr</c> if the receiver keeps the instance, a
-/// reference if it only uses it.
-/// </summary>
-/// <remarks>
+/// A resolved instance as `INJECT` passes it on: it converts to what the parameter it is passed to asks
+/// for, the `std::shared_ptr` or `std::weak_ptr` if the receiver keeps the instance, a reference if it
+/// only uses it.
+///
 /// A receiver that keeps the instance must take a smart pointer: for a transient registration, the
-/// <c>Injected</c> is the instance's only owner. Converting to a value of the instance's type is
-/// deleted, so a service is never copied or sliced by accident.
-/// </remarks>
+/// `Injected` is the instance's only owner. Converting to a value of the instance's type is deleted, so a
+/// service is never copied or sliced by accident.
 template<class T>
 class Injected
 {
@@ -47,10 +44,6 @@ class Injected
 public:
     using element_type = T;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Injected"/> class.
-    /// </summary>
-    /// <param name="instance">The resolved instance.</param>
     explicit Injected(std::shared_ptr<T> instance)
         : instance_(std::move(instance))
     {}
@@ -82,9 +75,6 @@ public:
     template<class U, class = IfConvertible<U>>
     operator U() const = delete;
 
-    /// <summary>
-    /// Gets the instance.
-    /// </summary>
     const std::shared_ptr<T>& Get() const
     {
         return instance_;
@@ -100,9 +90,7 @@ public:
         return instance_.get();
     }
 
-    /// <summary>
-    /// Determines whether an instance was resolved.
-    /// </summary>
+    /// `false` if the type wasn't registered.
     explicit operator bool() const
     {
         return static_cast<bool>(instance_);

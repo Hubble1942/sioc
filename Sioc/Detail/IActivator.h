@@ -30,22 +30,13 @@ class Container;
 
 namespace Sioc { namespace Detail {
 
-/// <summary>
-/// Common interface for all activators.
-/// </summary>
+/// Produces the instance of a registration as one of the types it's resolved as.
 class IActivator
 {
 public:
-    /// <summary>
-    /// Finalizes an instance of the <see cref="IActivator"/> class.
-    /// </summary>
     virtual ~IActivator() {}
 
-    /// <summary>
-    /// Activates the embedded instance.
-    /// </summary>
-    /// <param name="container">The ioc container.</param>
-    /// <returns>The activated instance.</returns>
+    /// Returns the instance as `std::shared_ptr<void>`, which the container casts back to the resolved type.
     virtual std::shared_ptr<void> Activate(const Container& container) const = 0;
 };
 

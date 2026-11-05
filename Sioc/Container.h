@@ -36,9 +36,7 @@
 namespace Sioc
 {
 
-    /// <summary>
     /// The simple inversion of control container.
-    /// </summary>
     class Container
     {
     public:
@@ -46,10 +44,8 @@ namespace Sioc
         Container(const Container&) = delete;
         Container& operator=(const Container&) = delete;
 
-        /// <summary>
-        /// Registers a delegate taking a <c>const Container&</c> as argumend and returning an instance.
-        /// </summary>
-        /// <param name="delegate">The delegate.</param>
+        /// Registers a delegate that takes the `const Container&` and returns a `std::shared_ptr` to the
+        /// instance.
         template<typename D, typename T = typename Detail::DeduceReturnType<D>::Type>
         Detail::RegistrationModifier<T> Register(D delegate)
         {
@@ -62,9 +58,7 @@ namespace Sioc
             return registrationModifier;
         }
 
-        /// <summary>
-        /// Registers a (for now default constructible) type.
-        /// </summary>
+        /// Registers a default constructible type.
         template<typename T>
         Detail::RegistrationModifier<T> RegisterType()
         {
@@ -76,10 +70,7 @@ namespace Sioc
                 });
         }
 
-        /// <summary>
-        /// Registers an instance.
-        /// </summary>
-        /// <param name="instance">The instance.</param>
+        /// Registers an existing instance, which every resolve returns.
         template<typename T>
         Detail::RegistrationModifier<T> RegisterInstance(const std::shared_ptr<T>& instance)
         {
@@ -89,9 +80,8 @@ namespace Sioc
                 });
         }
 
-        /// <summary>
-        /// Resolves an instance of a specified type.
-        /// </summary>
+        /// Returns an empty `std::shared_ptr` if `T` isn't registered; of several registrations, the last one
+        /// wins.
         template<typename T>
         std::shared_ptr<T> Resolve() const
         {
@@ -100,9 +90,8 @@ namespace Sioc
             return ResolveNamed<T>("");
         }
 
-        /// <summary>
-        /// Resolves an instances of a specified type for a specified name.
-        /// </summary>
+        /// Returns an empty `std::shared_ptr` if `T` isn't registered with `name`; of several registrations,
+        /// the last one wins.
         template<typename T>
         std::shared_ptr<T> ResolveNamed(const std::string& name) const
         {
@@ -118,9 +107,7 @@ namespace Sioc
             return std::shared_ptr<T>();
         }
 
-        /// <summary>
-        /// Resolves all instances of a specified type.
-        /// </summary>
+        /// Resolves every unnamed registration of `T`, in the order of registration.
         template<typename T>
         std::vector<std::shared_ptr<T>> ResolveAll() const
         {

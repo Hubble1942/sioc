@@ -27,35 +27,24 @@
 namespace Sioc
 {
 
-/// <summary>
-/// Lazy handle to a service of type T which is activated by an activator, called on the first access to get.
-/// </summary>
+/// A service that is resolved on the first access.
 template<class T>
 class Lazy
 {
 public:
     using Activator = std::function<std::shared_ptr<T>()>;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Lazy"/> class.
-    /// </summary>
-    /// <param name="activator">The activator.</param>
     explicit Lazy(Activator activator)
         : activator_(activator)
     {}
 
-    /// <summary>
-    /// Gets the service instance.
-    /// </summary>
+    /// Returns the service, resolving it on the first call.
     const std::shared_ptr<T>& Get() const
     {
         Activate();
         return service_;
     }
 
-    /// <summary>
-    /// Activates the service instance.
-    /// </summary>
     void Activate() const
     {
         if (!service_)
@@ -64,12 +53,6 @@ public:
         }
     }
 
-    /// <summary>
-    /// Determines whether the service instance is activated.
-    /// </summary>
-    /// <returns>
-    ///   <c>true</c> if the service is activated; otherwise, <c>false</c>.
-    /// </returns>
     bool IsActivated() const
     {
         return static_cast<bool>(service_);

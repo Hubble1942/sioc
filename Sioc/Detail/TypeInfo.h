@@ -30,20 +30,12 @@
 
 namespace Sioc { namespace Detail {
 
-/// <summary>
-/// Static wrapper/helper class providing access to type identifiers.
-/// </summary>
+/// Identifies a registration by its type and name.
 class TypeInfo
 {
 public:
-    /// <summary>
-    /// The type-identifier type.
-    /// </summary>
     typedef std::pair<std::type_index, std::string> IdType;
 
-    /// <summary>
-    /// Hash function for type identifiers.
-    /// </summary>
     struct IdHash
     {
         std::size_t operator()(const IdType& id) const
@@ -58,9 +50,7 @@ private:
     TypeInfo();
 
 public:
-    /// <summary>
-    /// Returns the identifier of the given type.
-    /// </summary>
+    /// An unnamed registration has the empty name.
     template<typename T>
     static IdType Id(const std::string& name)
     {

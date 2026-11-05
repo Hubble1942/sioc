@@ -28,9 +28,7 @@ class Container;
 
 namespace Sioc { namespace Detail {
 
-/// <summary>
-/// Helper to deduce the return type of a delegate.
-/// </summary>
+/// The type of the instance whose `std::shared_ptr` a delegate returns.
 template<typename D>
 struct DeduceReturnType
 {
