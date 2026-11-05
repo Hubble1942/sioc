@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -15,7 +16,8 @@ namespace Sioc {
 ///
 /// A receiver that keeps the instance must take a smart pointer: for a transient registration, the
 /// `Injected` is the instance's only owner. Converting to a value of the instance's type is deleted, so a
-/// service is never copied or sliced by accident.
+/// service is never copied or sliced by accident. Reaching the instance asserts that the type was
+/// registered.
 template<class T>
 class Injected
 {
@@ -52,7 +54,7 @@ public:
     // NOLINTNEXTLINE(*-explicit-constructor): the parameter it's passed to picks the conversion
     operator U&() const
     {
-        return *instance_;
+        return *this->operator->();
     }
 
     template<class U, class = IfConvertible<U>>
@@ -60,9 +62,13 @@ public:
 
     const std::shared_ptr<T>& Get() const { return instance_; }
 
-    T& operator*() const { return *instance_; }
+    T& operator*() const { return *this->operator->(); }
 
-    T* operator->() const { return instance_.get(); }
+    T* operator->() const
+    {
+        assert(instance_ && "the type isn't registered");
+        return instance_.get();
+    }
 
     /// `false` if the type wasn't registered.
     explicit operator bool() const { return static_cast<bool>(instance_); }

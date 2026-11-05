@@ -90,6 +90,17 @@ TEST(InjectedTest, AccessesTheInstance)
     EXPECT_FALSE(Injected<IntHolder>(nullptr));
 }
 
+#ifndef NDEBUG
+TEST(InjectedTest, AssertsThatTheTypeIsRegistered)
+{
+    const Injected<A> sut(nullptr);
+
+    EXPECT_DEATH((void)static_cast<A&>(sut), "isn't registered");
+    EXPECT_DEATH((void)*sut, "isn't registered");
+    EXPECT_DEATH((void)sut.operator->(), "isn't registered");
+}
+#endif
+
 TEST(InjectedTest, TypePassesWhatTheConstructorAsksFor)
 {
     Container sut;
