@@ -1,0 +1,103 @@
+# C++ formatting of Sioc, close to Visual Studio's; checked with clang-format 23.
+---
+Language: Cpp
+BasedOnStyle: Mozilla
+Standard: c++17
+
+# Indentation
+ColumnLimit: 120
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ContinuationIndentWidth: 4
+AccessModifierOffset: -4
+IndentCaseLabels: true
+IndentPPDirectives: None
+IndentWrappedFunctionNames: false
+NamespaceIndentation: None
+
+# Braces: Allman, except namespaces (CompactNamespaces needs their brace on the same line) and lambdas
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterExternBlock: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+
+# Namespaces: nested ones open and close on one line, one with a single declaration (a forward declaration)
+# fits on one line, and closing braces get no comment
+CompactNamespaces: true
+AllowShortNamespacesOnASingleLine: true
+FixNamespaceComments: false
+
+# Line breaks: one argument or parameter per line once they don't fit on one line
+AlignAfterOpenBracket: false
+AllowAllParametersOfDeclarationOnNextLine: false
+PackArguments:
+  BinPack: OnePerLine
+PackParameters:
+  BinPack: OnePerLine
+AlwaysBreakBeforeMultilineStrings: true
+# both, as Mozilla breaks after the return type of definitions with the deprecated option
+AlwaysBreakAfterDefinitionReturnType: None
+BreakAfterReturnType: None
+BreakBeforeBinaryOperators: All
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerIndentWidth: 4
+PackConstructorInitializers: NextLine
+BreakInheritanceList: BeforeComma
+BreakStringLiterals: false
+BreakTemplateDeclarations: Yes
+
+# Short statements: only inline and empty functions stay on one line
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+# 'virtual ~IFoo() {};' loses its semicolon
+RemoveSemicolon: true
+
+# Alignment
+AlignEscapedNewlines: Left
+AlignOperands: Align
+AlignTrailingComments:
+  Kind: Never
+PointerAlignment: Left
+
+# Spaces
+Cpp11BracedListStyle: AlignFirstComment
+SpaceAfterCStyleCast: false
+SpaceAfterTemplateKeyword: false
+SpaceBeforeParens: ControlStatements
+SpacesBeforeTrailingComments: 2
+SpacesInContainerLiterals: false
+
+# Includes and using declarations: sorted, and regrouped into blocks
+IncludeBlocks: Regroup
+SortIncludes:
+  Enabled: true
+SortUsingDeclarations: LexicographicNumeric
+
+# Empty lines and comments
+KeepEmptyLines:
+  AtEndOfFile: false
+  AtStartOfBlock: true
+  AtStartOfFile: true
+MaxEmptyLinesToKeep: 1
+ReflowComments: Always
+...

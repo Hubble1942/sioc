@@ -2,24 +2,21 @@
 // Copyright (c) 2018 Christian Ewald
 
 #include "TestHelpers/SomeClasses.h"
-#include <gtest/gtest.h>
+
 #include <Sioc/Container.h>
 #include <Sioc/Lazy.h>
+#include <gtest/gtest.h>
 
-namespace Sioc
-{
+namespace Sioc {
 
 using namespace TestHelpers;
 
-namespace
-{
+namespace {
 
 class LazyAHolder
 {
 public:
-    explicit LazyAHolder(const Lazy<A>& a)
-        : a_(a)
-    {}
+    explicit LazyAHolder(const Lazy<A>& a) : a_(a) {}
 
     Lazy<A> a_;
 };
@@ -30,7 +27,10 @@ TEST(LazyTest, ActivatorIsNotCalledBeforeFirstAccess)
 {
     int activations = 0;
 
-    Lazy<A> sut([&activations] { ++activations; return std::make_shared<A>(); });
+    Lazy<A> sut([&activations] {
+        ++activations;
+        return std::make_shared<A>();
+    });
 
     EXPECT_FALSE(sut.IsActivated());
     EXPECT_EQ(0, activations);
@@ -40,7 +40,10 @@ TEST(LazyTest, GetActivatesOnlyOnce)
 {
     int activations = 0;
 
-    Lazy<A> sut([&activations] { ++activations; return std::make_shared<A>(); });
+    Lazy<A> sut([&activations] {
+        ++activations;
+        return std::make_shared<A>();
+    });
 
     const auto& get1 = sut.Get();
     const auto& get2 = sut.Get();

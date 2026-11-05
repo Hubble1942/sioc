@@ -2,11 +2,11 @@
 // Copyright (c) 2014 Christian Ewald
 
 #include "TestHelpers/SomeClasses.h"
-#include <gtest/gtest.h>
-#include <Sioc/Container.h>
 
-namespace Sioc
-{
+#include <Sioc/Container.h>
+#include <gtest/gtest.h>
+
+namespace Sioc {
 
 using namespace TestHelpers;
 

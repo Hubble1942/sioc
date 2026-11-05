@@ -4,6 +4,7 @@
 #pragma once
 
 #include "IActivator.h"
+
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -32,4 +33,4 @@ private:
     std::shared_ptr<const InstanceFactory<SourceType>> instanceFactory_;
 };
 
-} }
+}}

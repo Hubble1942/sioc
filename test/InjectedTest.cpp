@@ -2,26 +2,22 @@
 // Copyright (c) 2026 Christian Ewald
 
 #include "TestHelpers/SomeClasses.h"
-#include <gtest/gtest.h>
+
 #include <Sioc/Container.h>
+#include <gtest/gtest.h>
 #include <type_traits>
 
-namespace Sioc
-{
+namespace Sioc {
 
 using namespace TestHelpers;
 
-namespace
-{
+namespace {
 
 /// Uses A only while it's constructed, keeps B.
 class UserAndKeeper
 {
 public:
-    UserAndKeeper(A& a, std::shared_ptr<B> b)
-        : a_(&a),
-          b_(std::move(b))
-    {}
+    UserAndKeeper(A& a, std::shared_ptr<B> b) : a_(&a), b_(std::move(b)) {}
 
     A* a_;
     std::shared_ptr<B> b_;
@@ -30,9 +26,7 @@ public:
 class WeakHolder
 {
 public:
-    explicit WeakHolder(std::weak_ptr<Base> base)
-        : base_(std::move(base))
-    {}
+    explicit WeakHolder(std::weak_ptr<Base> base) : base_(std::move(base)) {}
 
     std::weak_ptr<Base> base_;
 };
@@ -40,9 +34,7 @@ public:
 class ConstUser
 {
 public:
-    explicit ConstUser(const Base& base)
-        : base_(&base)
-    {}
+    explicit ConstUser(const Base& base) : base_(&base) {}
 
     const Base* base_;
 };
@@ -71,7 +63,7 @@ TEST(InjectedTest, MovesTheSharedPtrOutOfATemporary)
 
     std::shared_ptr<A> moved = std::move(sut);
 
-    EXPECT_EQ(nullptr, sut.Get()); // NOLINT(bugprone-use-after-move): checks that it was moved out
+    EXPECT_EQ(nullptr, sut.Get());  // NOLINT(bugprone-use-after-move): checks that it was moved out
     EXPECT_EQ(1, moved.use_count());
 }
 

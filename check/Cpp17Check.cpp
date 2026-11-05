@@ -10,7 +10,9 @@ namespace Sioc { namespace Cpp17Check {
 
 namespace {
 
-class A {};
+class A
+{
+};
 
 class B
 {
@@ -28,10 +30,9 @@ class D
 {
 public:
     D(A& a, std::weak_ptr<A> weak, std::shared_ptr<A> shared)
-        : a_(&a),
-          weak_(std::move(weak)),
-          shared_(std::move(shared))
-    {}
+        : a_(&a), weak_(std::move(weak)), shared_(std::move(shared))
+    {
+    }
 
     A* a_;
     std::weak_ptr<A> weak_;
@@ -56,4 +57,4 @@ void UseAllFeatures()
     container.Resolve<D>();
 }
 
-} }
+}}

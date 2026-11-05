@@ -7,8 +7,7 @@
 #include <memory>
 #include <utility>
 
-namespace Sioc
-{
+namespace Sioc {
 
 /// A service that is resolved on the first access.
 template<class T>
@@ -17,9 +16,7 @@ class Lazy
 public:
     using Activator = std::function<std::shared_ptr<T>()>;
 
-    explicit Lazy(Activator activator)
-        : activator_(std::move(activator))
-    {}
+    explicit Lazy(Activator activator) : activator_(std::move(activator)) {}
 
     /// Returns the service, resolving it on the first call.
     const std::shared_ptr<T>& Get() const
@@ -36,10 +33,7 @@ public:
         }
     }
 
-    bool IsActivated() const
-    {
-        return static_cast<bool>(service_);
-    }
+    bool IsActivated() const { return static_cast<bool>(service_); }
 
 private:
     Activator activator_;
@@ -48,4 +42,8 @@ private:
 
 }
 
-#define INJECT_LAZY(type) Sioc::Lazy<type>{ [&c]() { return c.Resolve<type>(); } }
+#define INJECT_LAZY(type)                    \
+    Sioc::Lazy<type>                         \
+    {                                        \
+        [&c]() { return c.Resolve<type>(); } \
+    }

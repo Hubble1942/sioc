@@ -7,8 +7,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace Sioc
-{
+namespace Sioc {
 
 /// A resolved instance as `INJECT` passes it on: it converts to what the parameter it is passed to asks
 /// for, the `std::shared_ptr` or `std::weak_ptr` if the receiver keeps the instance, a reference if it
@@ -26,9 +25,7 @@ class Injected
 public:
     using element_type = T;
 
-    explicit Injected(std::shared_ptr<T> instance)
-        : instance_(std::move(instance))
-    {}
+    explicit Injected(std::shared_ptr<T> instance) : instance_(std::move(instance)) {}
 
     template<class U, class = IfConvertible<U>>
     // NOLINTNEXTLINE(*-explicit-constructor): the parameter it's passed to picks the conversion
@@ -61,26 +58,14 @@ public:
     template<class U, class = IfConvertible<U>>
     operator U() const = delete;
 
-    const std::shared_ptr<T>& Get() const
-    {
-        return instance_;
-    }
+    const std::shared_ptr<T>& Get() const { return instance_; }
 
-    T& operator*() const
-    {
-        return *instance_;
-    }
+    T& operator*() const { return *instance_; }
 
-    T* operator->() const
-    {
-        return instance_.get();
-    }
+    T* operator->() const { return instance_.get(); }
 
     /// `false` if the type wasn't registered.
-    explicit operator bool() const
-    {
-        return static_cast<bool>(instance_);
-    }
+    explicit operator bool() const { return static_cast<bool>(instance_); }
 
 private:
     std::shared_ptr<T> instance_;

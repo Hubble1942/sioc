@@ -51,4 +51,4 @@ private:
     Activators empty_;
 };
 
-} }
+}}

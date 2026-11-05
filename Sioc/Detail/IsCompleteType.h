@@ -7,12 +7,14 @@
 
 namespace Sioc { namespace Detail {
 
-template <class T, class = void>
+template<class T, class = void>
 struct IsCompleteType : std::false_type
-{};
+{
+};
 
-template <class T>
+template<class T>
 struct IsCompleteType<T, std::void_t<decltype(sizeof(T))>> : std::true_type
-{};
+{
+};
 
-} }
+}}

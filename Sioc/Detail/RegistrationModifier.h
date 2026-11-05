@@ -4,8 +4,9 @@
 #pragma once
 
 #include "ActivatorRegistry.h"
-#include "InstanceFactory.h"
 #include "GenericActivator.h"
+#include "InstanceFactory.h"
+
 #include <string>
 #include <type_traits>
 #include <unordered_map>
@@ -17,19 +18,21 @@ template<typename RegisterType>
 class RegistrationModifier
 {
 private:
-    using Activators = std::unordered_map<Detail::TypeInfo::IdType, std::shared_ptr<const IActivator>, Detail::TypeInfo::IdHash>;
+    using Activators
+        = std::unordered_map<Detail::TypeInfo::IdType, std::shared_ptr<const IActivator>, Detail::TypeInfo::IdHash>;
 
 public:
     RegistrationModifier(ActivatorRegistry& registry, std::shared_ptr<InstanceFactory<RegisterType>> instanceFactory)
-        : registry_(registry),
-          instanceFactory_(std::move(instanceFactory))
-    {}
+        : registry_(registry), instanceFactory_(std::move(instanceFactory))
+    {
+    }
 
     RegistrationModifier(RegistrationModifier&& other) noexcept
-        : registry_(other.registry_),
-          instanceFactory_(std::move(other.instanceFactory_)),
-          activators_(std::move(other.activators_))
-    {}
+        : registry_(other.registry_)
+        , instanceFactory_(std::move(other.instanceFactory_))
+        , activators_(std::move(other.activators_))
+    {
+    }
 
     RegistrationModifier(const RegistrationModifier&) = delete;
     RegistrationModifier& operator=(const RegistrationModifier&) = delete;
@@ -78,4 +81,4 @@ private:
     Activators activators_;
 };
 
-} }
+}}

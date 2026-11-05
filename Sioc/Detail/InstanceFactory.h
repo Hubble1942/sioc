@@ -8,10 +8,7 @@
 #include <memory>
 #include <utility>
 
-namespace Sioc
-{
-class Container;
-}
+namespace Sioc { class Container; }
 
 namespace Sioc { namespace Detail {
 
@@ -28,7 +25,8 @@ class InstanceFactory
 public:
     explicit InstanceFactory(std::function<std::shared_ptr<T>(const Container&)> delegate)
         : delegate_(std::move(delegate))
-    {}
+    {
+    }
 
     InstanceFactory(const InstanceFactory&) = delete;
     InstanceFactory& operator=(const InstanceFactory&) = delete;
@@ -39,34 +37,31 @@ public:
 
         switch (lifeCyclePolicy_)
         {
-        case LifeCyclePolicy::SingleInstance:
-            if (singleProduct_ == nullptr)
-            {
-                singleProduct_ = delegate_(container);
-            }
-            product = singleProduct_;
-            break;
+            case LifeCyclePolicy::SingleInstance:
+                if (singleProduct_ == nullptr)
+                {
+                    singleProduct_ = delegate_(container);
+                }
+                product = singleProduct_;
+                break;
 
-        case LifeCyclePolicy::WeakSingleInstance:
-            product = weakSingleProduct_.lock();
-            if (product == nullptr)
-            {
+            case LifeCyclePolicy::WeakSingleInstance:
+                product = weakSingleProduct_.lock();
+                if (product == nullptr)
+                {
+                    product = delegate_(container);
+                    weakSingleProduct_ = product;
+                }
+                break;
+
+            default:
                 product = delegate_(container);
-                weakSingleProduct_ = product;
-            }
-            break;
-
-        default:
-            product = delegate_(container);
         }
 
         return product;
     }
 
-    void SetLifeCyclePolicy(LifeCyclePolicy lifeCyclePolicy)
-    {
-        lifeCyclePolicy_ = lifeCyclePolicy;
-    }
+    void SetLifeCyclePolicy(LifeCyclePolicy lifeCyclePolicy) { lifeCyclePolicy_ = lifeCyclePolicy; }
 
 private:
     std::function<std::shared_ptr<T>(const Container&)> delegate_;
@@ -75,4 +70,4 @@ private:
     mutable std::weak_ptr<T> weakSingleProduct_;
 };
 
-} }
+}}

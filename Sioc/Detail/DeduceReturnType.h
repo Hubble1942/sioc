@@ -5,10 +5,7 @@
 
 #include <type_traits>
 
-namespace Sioc
-{
-class Container;
-}
+namespace Sioc { class Container; }
 
 namespace Sioc { namespace Detail {
 
@@ -19,4 +16,4 @@ struct DeduceReturnType
     using Type = typename std::invoke_result_t<D, const Container&>::element_type;
 };
 
-} }
+}}

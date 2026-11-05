@@ -5,10 +5,10 @@
 
 #include <cstddef>
 #include <functional>
-#include <typeinfo>
-#include <typeindex>
-#include <utility>
 #include <string>
+#include <typeindex>
+#include <typeinfo>
+#include <utility>
 
 namespace Sioc { namespace Detail {
 
@@ -38,4 +38,4 @@ public:
     }
 };
 
-} }
+}}

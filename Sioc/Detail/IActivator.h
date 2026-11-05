@@ -5,10 +5,7 @@
 
 #include <memory>
 
-namespace Sioc
-{
-class Container;
-}
+namespace Sioc { class Container; }
 
 namespace Sioc { namespace Detail {
 
@@ -22,4 +19,4 @@ public:
     virtual std::shared_ptr<void> Activate(const Container& container) const = 0;
 };
 
-} }
+}}
