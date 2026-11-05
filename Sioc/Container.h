@@ -27,6 +27,7 @@
 #include "Detail/IsCompleteType.h"
 #include "Detail/RegistrationModifier.h"
 #include "Detail/TypeInfo.h"
+#include "Injected.h"
 #include <functional>
 #include <memory>
 #include <type_traits>
@@ -144,9 +145,9 @@ namespace Sioc
 
 #define TYPE(type, ...) [=](const Sioc::Container& c) -> std::shared_ptr<type> { (void)c; return std::make_shared<type>(__VA_ARGS__); }
 #define FACTORY(statement) [=](const Sioc::Container& c) { (void)c; return statement; }
-#define INJECT(type) c.Resolve<type>()
-#define INJECT_FACTORY(type) [&c]() { return INJECT(type); }
-#define INJECT_NAMED(type, name) c.ResolveNamed<type>(name)
+#define INJECT(type) Sioc::Injected<type>(c.Resolve<type>())
+#define INJECT_FACTORY(type) [&c]() { return c.Resolve<type>(); }
+#define INJECT_NAMED(type, name) Sioc::Injected<type>(c.ResolveNamed<type>(name))
 #define INJECT_ALL(type) c.ResolveAll<type>()
 
 }

@@ -59,8 +59,8 @@ Have a look at the tests for further examples.
 |---|---|
 | `TYPE(type, args...)` | Creates `type` with `std::make_shared<type>(args...)` |
 | `FACTORY(statement)` | Creates the instance returned by `statement` |
-| `INJECT(type)` | `std::shared_ptr<type>` |
-| `INJECT_NAMED(type, name)` | `std::shared_ptr<type>` registered with `name` |
+| `INJECT(type)` | `Sioc::Injected<type>`, converting to `std::shared_ptr`, `std::weak_ptr` or a reference |
+| `INJECT_NAMED(type, name)` | `Sioc::Injected<type>` registered with `name` |
 | `INJECT_ALL(type)` | `std::vector<std::shared_ptr<type>>` with all registrations of `type` |
 | `INJECT_FACTORY(type)` | Function returning a `std::shared_ptr<type>` on each call |
 | `INJECT_LAZY(type)` | `Sioc::Lazy<type>` resolving on first access (requires `<Sioc/Lazy.h>`) |
@@ -69,6 +69,20 @@ Have a look at the tests for further examples.
 container.Register(TYPE(Client, INJECT_NAMED(Middle, "Foo"), INJECT_ALL(Base), INJECT_FACTORY(Service), INJECT_LAZY(Service)));
 container.Register(FACTORY(std::make_shared<BaseHolder>(INJECT(Base))));
 ```
+
+`INJECT` and `INJECT_NAMED` pass the instance the way the constructor parameter asks for it: a
+`std::shared_ptr` or `std::weak_ptr` if the class keeps the instance, a reference if it only uses it
+while it's constructed. So `TYPE(Client, INJECT(Service))` fits both of these constructors:
+
+```cpp
+Client(std::shared_ptr<Service> service);
+Client(Service& service);
+```
+
+A class that keeps the instance must take a smart pointer: for a transient registration, the
+`Sioc::Injected` is the instance's only owner. Converting it to a value of the instance's type doesn't
+compile, so a service isn't copied or sliced by accident. `->`, `*` and `Get()` reach the instance
+itself, e.g. `FACTORY(INJECT(Factory)->Create())`.
 
 ## Testing
 
