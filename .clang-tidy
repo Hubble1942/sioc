@@ -1,0 +1,24 @@
+# The checks CI runs over the tests and the C++17 check, which instantiate every header. Never enable
+# modernize-concat-nested-namespaces: Qt 4's moc can't parse nested namespace definitions. misc-const-correctness
+# is left out: its fix puts the const right of the type.
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  cppcoreguidelines-virtual-class-destructor,
+  google-explicit-constructor,
+  misc-*,
+  -misc-const-correctness,
+  -misc-include-cleaner,
+  -misc-non-private-member-variables-in-classes,
+  modernize-*,
+  -modernize-concat-nested-namespaces,
+  -modernize-use-nodiscard,
+  -modernize-use-trailing-return-type,
+  performance-*,
+  readability-avoid-const-params-in-decls,
+  readability-const-return-type,
+  readability-make-member-function-const,
+  readability-redundant-*
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*/Sioc/.*'

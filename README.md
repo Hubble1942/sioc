@@ -8,7 +8,7 @@ The bullet list:
 * Requires C++17; the headers avoid nested namespace definitions, so Qt 4's moc can read them
 * No dependencies besides the standard library
 * Some ideas borrowed from [Autofac](http://autofac.org/) and [Hypodermic](https://github.com/ybainier/Hypodermic)
-* Tested with GCC
+* Tested with GCC and MSVC, checked with clang-tidy
 
 ## Main Goals
 
